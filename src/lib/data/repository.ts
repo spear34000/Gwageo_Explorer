@@ -1,7 +1,6 @@
 import type {
   ClanComparison,
   ClanDetail,
-  ClanNotable,
   ClanSearchResult,
   ClanSummary,
   DataRepository,
@@ -272,7 +271,6 @@ abstract class BaseClanRepository implements DataRepository {
 
   abstract getPerson(id: string): Promise<PersonDetail | null>;
   abstract popularSearches(): Promise<string[]>;
-  abstract getClanNotables(clanId: string): Promise<ClanNotable[]>;
 }
 
 /** seed 기반 메모리 저장소. DB가 없거나 DATA_SOURCE=mock일 때 사용한다 */
@@ -367,10 +365,6 @@ class MockDataRepository extends BaseClanRepository {
 
   async popularSearches(): Promise<string[]> {
     return ["안동 김씨", "전주 이씨", "김해 김씨", "안동 권씨"];
-  }
-
-  async getClanNotables(): Promise<ClanNotable[]> {
-    return [];
   }
 }
 
@@ -493,23 +487,6 @@ class PrismaDataRepository extends BaseClanRepository {
     return rankByColumn(await this.loadSummaries(), "total")
       .slice(0, 6)
       .map((c) => c.name);
-  }
-
-  async getClanNotables(clanId: string): Promise<ClanNotable[]> {
-    const rows = await prisma.clanNotable.findMany({
-      where: { clanId },
-      orderBy: { name: "asc" },
-    });
-    return rows.map((r) => ({
-      id: r.id,
-      wikidataId: r.wikidataId,
-      name: r.name,
-      clanId: r.clanId,
-      description: r.description,
-      occupation: r.occupation,
-      birthYear: r.birthYear ?? undefined,
-      deathYear: r.deathYear ?? undefined,
-    }));
   }
 }
 

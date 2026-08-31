@@ -52,16 +52,3 @@ model PersonRelation {
 
   @@id([personId, relatedPersonId, type])
 }
-
-model ClanNotable {
-  id          String  @id
-  wikidataId  String
-  name        String
-  clanId      String
-  description String?
-  occupation  String?
-  birthYear   Int?
-  deathYear   Int?
-
-  @@index([clanId])
-}

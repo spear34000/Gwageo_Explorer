@@ -21,8 +21,7 @@
   <a href="#시작하기">시작하기</a> ·
   <a href="#주요-기능">주요 기능</a> ·
   <a href="#데이터">데이터</a> ·
-  <a href="#ai-본관-리뷰">AI 리뷰</a> ·
-  <a href="#본관별-유명-인물">유명 인물</a>
+  <a href="#ai-본관-리뷰">AI 리뷰</a>
 </p>
 
 ---
@@ -43,7 +42,6 @@
 - **본관 비교** — 두 본관을 나란히 비교(전성기 왕, 주 거주지)
 - **랭킹 TOP 100** — 전체/문과/무과/생원/진사 정렬
 - **AI 본관 리뷰** — 본관 집계를 재료로 한 유머 요약(병맛/수다/다큐병/중계 4톤 랜덤)
-- **유명 인물** — Wikidata(CC0) 기반 본관별 유명 인물
 - **다크모드** — 헤더 토글 + `localStorage` + `prefers-color-scheme` + 플래시 방지
 - **포스터 저장** — 본관 포스터를 512×512 이미지로 다운로드
 
@@ -76,7 +74,6 @@ npm install
 # DB 스키마 생성 + 시드 (최초 1회, 재실행 시 동일 결과)
 npm run db:push
 npm run db:seed          # 69,181 인물 / 84,525 합격 / 42,324 관계
-npm run db:seed:notables # Wikidata 유명 인물 230건 (선택)
 
 # 개발 서버 (http://localhost:3000)
 npm run dev
@@ -105,7 +102,6 @@ DATA_SOURCE=mock npm run dev
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run db:push` | `prisma db push` |
 | `npm run db:seed` | `prisma db seed` (tsx `prisma/seed.ts`) |
-| `npm run db:seed:notables` | Wikidata에서 본관별 유명 인물 수집 후 적재 |
 
 ---
 
@@ -122,21 +118,9 @@ NVIDIA_MODEL=nvidia/nemotron-3-nano-30b-a3b
 
 ---
 
-## 본관별 유명 인물
-
-클랜 상세 페이지에 Wikidata(CC0) 기반 유명 인물을 노출합니다.
-
-- SPARQL: `P53(가문)` → `Q846706(본관)` 으로 연결된 한국 인물을 수집
-- 매핑: `경주 김씨` → `경주-김` (`씨` 제거 + 공백→하이픈)
-- 적재: `npm run db:seed:notables` (예: 230건)
-
-> 파(분파) 단위까지 확장하려면 `branchId` 필드와 별도 파 데이터 소스가 필요합니다. 현재는 본관 단위이며, 파 확장은 `가문정보(분파/항렬)`가 있는 `gok.kr` 또는 위키백과 파 목록을 소스로 추가할 수 있습니다.
-
----
-
 ## 데이터
 
-- **스키마:** `prisma/schema.prisma` (`Person`, `Exam`, `PersonRelation`, `ClanNotable`)
+- **스키마:** `prisma/schema.prisma` (`Person`, `Exam`, `PersonRelation`)
 - **시드:** `prisma/seed.ts` — `prisma/real-data.json`을 SQLite에 적재
 - **수집:** `scripts/ingest-real-data.mjs` — 원본 XLSX(문과/무과/생원/진사/친속)를 정규화(본관·이름 병합, 연도/왕/등급 파생)하여 `prisma/real-data.json` 생성
 - **등급:** 원자료에 등급 필드가 없어 연도별 순번으로 근사(갑과 1–3 / 을과 4–10 / 병과 11~)
@@ -163,7 +147,7 @@ src/components/           표·차트·탭·검색 등
 src/lib/data/             repository, types, mock-data, clan-roster, kings, db
 prisma/                   schema, seed, real-data.json
 generated/prisma/         Prisma Client (@db/* alias)
-scripts/                  ingest / seed-notables
+scripts/                  ingest
 ```
 
 ---
@@ -189,4 +173,4 @@ MIT — `LICENSE` 참고. 데이터는 한국학중앙연구원 AKS 출처를 �
 
 ---
 
-<p align="center"><sub>Made with Next.js · Prisma · Wikidata CC0</sub></p>
+<p align="center"><sub>Made with Next.js · Prisma</sub></p>

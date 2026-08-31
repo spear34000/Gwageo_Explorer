@@ -57,8 +57,3 @@ dev3100.err
 /.omo/
 /.codegraph/
 /.playwright-mcp/
-
-# crawl temp
-pplIds.json
-crawl-aks.log
-crawl-aks.err

@@ -203,18 +203,6 @@ export interface ClanSearchResult {
   matchLabel: string;
 }
 
-/** 본관별 유명 인물 (Wikidata CC0). 없으면 빈 배열 */
-export interface ClanNotable {
-  id: string;
-  wikidataId: string;
-  name: string;
-  clanId: string;
-  description?: string | null;
-  occupation?: string | null;
-  birthYear?: number | null;
-  deathYear?: number | null;
-}
-
 /**
  * 데이터 저장소 인터페이스.
  *
@@ -254,6 +242,4 @@ export interface DataRepository {
   getComparison(aId: string, bId: string): Promise<ClanComparison | null>;
   /** 인기 검색어 예시 */
   popularSearches(): Promise<string[]>;
-  /** 본관별 유명 인물 (Wikidata). 해당 본관에 없으면 빈 배열 */
-  getClanNotables(clanId: string): Promise<ClanNotable[]>;
 }

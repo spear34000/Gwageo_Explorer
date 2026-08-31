@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { formatNumber } from "@/lib/format";
-import type { ClanDetail, ClanNotable, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
+import type { ClanDetail, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
 import ClanSummary from "@/components/ClanSummary";
 import AIClanSummary from "@/components/AIClanSummary";
 import PeriodTimeline from "@/components/PeriodTimeline";
@@ -14,7 +14,6 @@ interface Props {
   clanId: string;
   rawId: string;
   detail: ClanDetail;
-  notables: ClanNotable[];
   items: ExamRecordRow[];
   totalPages: number;
   pageNum: number;
@@ -27,7 +26,6 @@ export default function ClanDetailClient({
   clanId,
   rawId,
   detail,
-  notables,
   items,
   totalPages,
   pageNum,
@@ -61,6 +59,22 @@ export default function ClanDetailClient({
 
       <section>
         <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
+        <div className="mb-3 flex gap-px">
+          {detail.byKing.map((k) => {
+            const intensity = timelineMax > 0 ? k.count / timelineMax : 0;
+            return (
+              <div
+                key={k.kingId}
+                className="h-2 flex-1 rounded-sm"
+                style={{
+                  backgroundColor: `rgba(14,77,122,${intensity > 0 ? 0.18 + intensity * 0.82 : 0.06})`,
+                }}
+                title={`${k.kingName} ${formatNumber(k.count)}명`}
+                aria-label={`${k.kingName} ${k.count}명`}
+              />
+            );
+          })}
+        </div>
         <PeriodTimeline
           data={detail.byKing.map((k: KingCount) => ({
             label: k.kingName,
@@ -91,52 +105,32 @@ export default function ClanDetailClient({
             <thead>
               <tr>
                 <th scope="col">거주지</th>
+                <th scope="col">비율</th>
                 <th scope="col" className="num">
                   합격자 수
                 </th>
               </tr>
             </thead>
             <tbody>
-              {detail.residences.slice(0, 5).map((r: { residence: string; count: number }) => (
-                <tr key={r.residence}>
-                  <td>{r.residence}</td>
-                  <td className="num">{formatNumber(r.count)}</td>
-                </tr>
-              ))}
+              {(() => {
+                const top5 = detail.residences.slice(0, 5);
+                const maxR = Math.max(...top5.map((r) => r.count), 1);
+                return top5.map((r: { residence: string; count: number }) => (
+                  <tr key={r.residence}>
+                    <td>{r.residence}</td>
+                    <td className="w-32">
+                      <span className="bar-track block h-2" role="img" aria-label={`${r.residence} ${r.count}명`}>
+                        <span className="bar-fill block h-2" style={{ width: `${(r.count / maxR) * 100}%` }} />
+                      </span>
+                    </td>
+                    <td className="num">{formatNumber(r.count)}</td>
+                  </tr>
+                ));
+              })()}
             </tbody>
           </table>
         </div>
       </section>
-
-      {notables.length > 0 && (
-        <section>
-          <h2 className="mb-3 font-display text-lg">유명 인물</h2>
-          <div className="table-scroll">
-            <table className="data-table">
-              <caption className="sr-only">본관 출신 유명 인물</caption>
-              <thead>
-                <tr>
-                  <th scope="col">인물</th>
-                  <th scope="col">설명</th>
-                </tr>
-              </thead>
-              <tbody>
-                {notables.map((n) => (
-                  <tr key={n.id}>
-                    <td>
-                      {n.name}
-                      {n.birthYear
-                        ? ` (${n.birthYear}${n.deathYear ? `–${n.deathYear}` : ""})`
-                        : ""}
-                    </td>
-                    <td>{n.description ?? ""}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
     </div>
   );
 }

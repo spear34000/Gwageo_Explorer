@@ -10,8 +10,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
-    "db:seed": "prisma db seed",
-    "db:seed:notables": "tsx scripts/seed-notables.ts"
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.9.1",

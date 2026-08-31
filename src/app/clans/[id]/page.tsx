@@ -32,8 +32,6 @@ export default async function ClanDetailPage({
   const detail = await repository.getClan(clanId);
   if (!detail) notFound();
 
-  const notables = await repository.getClanNotables(clanId);
-
   const sp = await searchParams;
   const activeExam = normalizeExam(sp.exam);
   const examType = activeExam === "all" ? undefined : activeExam;
@@ -55,7 +53,6 @@ export default async function ClanDetailPage({
       clanId={clanId}
       rawId={id}
       detail={detail}
-      notables={notables}
       items={items}
       totalPages={totalPages}
       pageNum={pageNum}
