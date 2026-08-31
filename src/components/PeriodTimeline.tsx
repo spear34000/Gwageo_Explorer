@@ -11,87 +11,64 @@ interface PeriodTimelineProps {
 
 export default function PeriodTimeline({ data, max }: PeriodTimelineProps) {
   const chartMax = max ?? Math.max(0, ...data.map((d) => d.value));
-  const scale = chartMax > 0 ? chartMax : 1;
-
-  const W = 100;
-  const H = 52;
-  const padL = 2, padR = 2, padT = 6, padB = 16;
-  const innerW = W - padL - padR;
-  const innerH = H - padT - padB;
-
-  const step = data.length > 1 ? innerW / (data.length - 1) : 0;
-
-  const points = data.map((d, i) => {
-    const x = padL + i * step;
-    const y = padT + innerH - (d.value / scale) * innerH;
-    return { x, y, d };
-  });
-
-  const lineD = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(" ");
-  const areaD = `${lineD} L ${points[points.length - 1].x.toFixed(2)} ${padT + innerH} L ${points[0].x.toFixed(2)} ${padT + innerH} Z`;
+  const visible = data.filter((d) => d.value > 0);
+  const maxVal = Math.max(...visible.map((d) => d.value), 1);
 
   useEffect(() => {
-    const line = document.querySelector<SVGPathElement>(".pt-line");
-    if (line) {
-      const len = line.getTotalLength();
-      line.style.strokeDasharray = `${len}`;
-      line.style.strokeDashoffset = `${len}`;
-      animate(line, {
-        strokeDashoffset: [len, 0],
-        duration: 900,
-        easing: "outQuad",
-      } as any);
-    }
-    animate(".pt-area", {
+    animate(".pt-dot2", {
+      scale: [0, 1],
       opacity: [0, 1],
-      duration: 600,
-      delay: 150,
-      easing: "outQuad",
-    } as any);
-    animate(".pt-dot", {
-      opacity: [0, 1],
-      duration: 400,
+      duration: 420,
       // @ts-ignore
-      delay: (_el: Element, i: number) => 300 + i * 18,
+      delay: (_el: Element, i: number) => i * 32,
+      easing: "outBack",
+    } as any);
+    animate(".pt-label2", {
+      opacity: [0, 1],
+      translateY: [4, 0],
+      duration: 300,
+      // @ts-ignore
+      delay: (_el: Element, i: number) => i * 32 + 80,
       easing: "outQuad",
     } as any);
   }, [data, max]);
 
   return (
-    <div className="space-y-2">
-      <div className="overflow-x-auto">
-        <svg viewBox={`0 0 ${W} ${H}`} className="min-w-[640px] w-full h-[220px]" role="img" aria-label="시대별 합격자 추이">
-          <defs>
-            <linearGradient id="ptAreaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0e4d7a" stopOpacity={0.32} />
-              <stop offset="100%" stopColor="#0e4d7a" stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
-          {[0, 0.5, 1].map((t) => {
-            const y = padT + innerH * (1 - t);
-            return <line key={t} x1={padL} x2={W - padR} y1={y} y2={y} stroke="currentColor" className="text-line" strokeWidth={0.25} opacity={0.5} />;
+    <div className="space-y-3">
+      <div className="relative">
+        <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-line" />
+        <div className="relative flex items-center justify-between gap-1 overflow-x-auto py-4">
+          {data.map((d) => {
+            const isPeak = d.value === chartMax && d.value > 0;
+            const size = d.value > 0 ? 8 + (d.value / maxVal) * 22 : 6;
+            return (
+              <div key={d.label} className="flex flex-col items-center gap-1.5 shrink-0">
+                <div
+                  className={`pt-dot2 flex items-center justify-center rounded-full border-2 bg-background ${isPeak ? "border-accent bg-accent text-white" : d.value > 0 ? "border-accent" : "border-line bg-subtle"}`}
+                  style={{ width: size, height: size }}
+                  title={`${d.label} ${formatNumber(d.value)}명`}
+                >
+                  {isPeak && <span className="text-[8px] font-bold">●</span>}
+                </div>
+                <span className="pt-label2 text-[10px] leading-none text-ink-2 whitespace-nowrap">
+                  {d.label}
+                </span>
+                {d.value > 0 && (
+                  <span className="text-[10px] font-medium leading-none text-foreground">
+                    {formatNumber(d.value)}
+                  </span>
+                )}
+              </div>
+            );
           })}
-          <path d={areaD} fill="url(#ptAreaGrad)" className="pt-area" opacity={0} />
-          <path d={lineD} fill="none" stroke="#0e4d7a" strokeWidth={1.4} strokeLinejoin="round" strokeLinecap="round" className="pt-line" />
-          {points.map((p) => (
-            <circle key={p.d.label} cx={p.x} cy={p.y} r={p.d.value > 0 ? 1.9 : 1.2} fill={p.d.value > 0 ? "#0e4d7a" : "#9ca3af"} stroke="white" strokeWidth={0.6} className="pt-dot" opacity={0}>
-              <title>{`${p.d.label} ${formatNumber(p.d.value)}명`}</title>
-            </circle>
-          ))}
-          {points.map((p) => (
-            <text key={`l-${p.d.label}`} x={p.x} y={H - 2} textAnchor="middle" fontSize="2.6" className="fill-ink-2">
-              {p.d.label}
-            </text>
-          ))}
-        </svg>
+        </div>
       </div>
-      <div className="flex flex-wrap gap-1.5 text-xs text-ink-2">
-        {data.filter((d) => d.value > 0).slice(0, 6).map((d) => (
-          <span key={d.label} className="rounded bg-subtle px-1.5 py-0.5">
-            {d.label} <span className="font-medium text-foreground">{formatNumber(d.value)}</span>
-          </span>
-        ))}
-      </div>
+      <p className="text-xs text-ink-2">
+        가장 합격자가 많았던 시기:{" "}
+        <span className="font-medium text-foreground">
+          {visible.length > 0 ? `${visible.reduce((a, b) => (a.value > b.value ? a : b)).label} ${formatNumber(Math.max(...visible.map((d) => d.value)))}명` : "기록 없음"}
+        </span>
+      </p>
     </div>
   );
 }
