@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
-import { animate } from "animejs";
+import { useEffect, useMemo, useState } from "react";
+import { animate, type AnimationParams, type FunctionValue } from "animejs";
 import { formatNumber } from "@/lib/format";
+import { getMapYearRange, summarizeResidencesThroughYear, type MapRecord } from "@/lib/historical-places/residence-timeline";
 import type { ClanDetail, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
 import ClanSummary from "@/components/ClanSummary";
 import AIClanSummary from "@/components/AIClanSummary";
@@ -18,6 +19,7 @@ interface Props {
   rawId: string;
   detail: ClanDetail;
   items: ExamRecordRow[];
+  mapRows: MapRecord[];
   totalPages: number;
   pageNum: number;
   baseHref: string;
@@ -30,37 +32,48 @@ export default function ClanDetailClient({
   rawId,
   detail,
   items,
+  mapRows,
   totalPages,
   pageNum,
   baseHref,
   activeExam,
   timelineMax,
 }: Props) {
+  const { min: minYear, max: maxYear } = getMapYearRange(mapRows);
+  const [periodEnd, setPeriodEnd] = useState(maxYear);
+  const [mapMode, setMapMode] = useState<"all" | "bonGwan" | "residences">("all");
+  const mapResidences = useMemo(() => summarizeResidencesThroughYear(mapRows, periodEnd), [mapRows, periodEnd]);
   useEffect(() => {
-    animate(".bar-row", {
+    const barDelay: FunctionValue<number> = (_target, index = 0) => index * 35;
+    const rowDelay: FunctionValue<number> = (_target, index = 0) => index * 28;
+    const fadeDelay: FunctionValue<number> = (_target, index = 0) => index * 55;
+    const barAnimation: AnimationParams = {
       opacity: [0, 1],
       translateY: [4, 0],
       duration: 500,
-      // @ts-ignore animejs delay type
-      delay: (_el: Element, i: number) => i * 35,
+      delay: barDelay,
       easing: "outQuad",
-    } as any);
-    animate(".data-table tbody tr", {
+    };
+    const rowAnimation: AnimationParams = {
       opacity: [0, 1],
       translateY: [6, 0],
       duration: 380,
-      // @ts-ignore animejs delay type
-      delay: (_el: Element, i: number) => i * 28,
+      delay: rowDelay,
       easing: "outQuad",
-    } as any);
-    animate("[data-animate='fade']", {
+    };
+    const fadeAnimation: AnimationParams = {
       opacity: [0, 1],
       translateY: [8, 0],
       duration: 480,
-      // @ts-ignore animejs delay type
-      delay: (_el: Element, i: number) => i * 55,
+      delay: fadeDelay,
       easing: "outQuad",
-    } as any);
+    };
+    const barTargets = document.querySelectorAll(".bar-row");
+    const rowTargets = document.querySelectorAll(".data-table tbody tr");
+    const fadeTargets = document.querySelectorAll("[data-animate='fade']");
+    if (barTargets.length > 0) animate(barTargets, barAnimation);
+    if (rowTargets.length > 0) animate(rowTargets, rowAnimation);
+    if (fadeTargets.length > 0) animate(fadeTargets, fadeAnimation);
   }, [clanId]);
 
   return (
@@ -88,7 +101,20 @@ export default function ClanDetailClient({
       </div>
 
       <div data-animate="fade" className="grid gap-6 lg:grid-cols-[300px_1fr]">
-        <KoreaMap residences={detail.residences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} />
+        <div>
+          <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+            {(["all", "bonGwan", "residences"] as const).map((mode) => (
+              <button key={mode} type="button" className="btn-secondary px-2 py-1" aria-pressed={mapMode === mode} onClick={() => setMapMode(mode)}>
+                {mode === "all" ? "전체" : mode === "bonGwan" ? "본관" : "거주지"}
+              </button>
+            ))}
+            <label className="ml-auto flex items-center gap-2 text-ink-2">
+              {periodEnd}년
+              <input aria-label="지도 연도" type="range" min={minYear} max={maxYear} value={periodEnd} onChange={(event) => setPeriodEnd(Number(event.target.value))} />
+            </label>
+          </div>
+          <KoreaMap residences={mapResidences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} markerMode={mapMode} />
+        </div>
         <ClanSummary detail={detail} />
       </div>
 

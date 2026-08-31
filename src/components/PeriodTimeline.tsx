@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { animate } from "animejs";
+import { useEffect, useRef } from "react";
+import { animate, type AnimationParams, type FunctionValue } from "animejs";
 import { formatNumber } from "@/lib/format";
 
 interface PeriodTimelineProps {
@@ -10,32 +10,38 @@ interface PeriodTimelineProps {
 }
 
 export default function PeriodTimeline({ data, max }: PeriodTimelineProps) {
+  const timelineRef = useRef<HTMLDivElement>(null);
   const chartMax = max ?? Math.max(0, ...data.map((d) => d.value));
   const scale = chartMax > 0 ? chartMax : 1;
   const visible = data.filter((d) => d.value > 0);
   const peak = visible.length > 0 ? visible.reduce((a, b) => (a.value > b.value ? a : b)) : null;
 
   useEffect(() => {
-    animate(".pt-vbar", {
+    if (!timelineRef.current) return;
+    const barDelay: FunctionValue<number> = (_target, index = 0) => index * 32;
+    const labelDelay: FunctionValue<number> = (_target, index = 0) => index * 32 + 180;
+    const barAnimation: AnimationParams = {
       scaleY: [0, 1],
       opacity: [0, 1],
       duration: 700,
-      // @ts-ignore
-      delay: (_el: Element, i: number) => i * 32,
+      delay: barDelay,
       easing: "outExpo",
-    } as any);
-    animate(".pt-vlabel", {
+    };
+    const labelAnimation: AnimationParams = {
       opacity: [0, 1],
       translateY: [4, 0],
       duration: 350,
-      // @ts-ignore
-      delay: (_el: Element, i: number) => i * 32 + 180,
+      delay: labelDelay,
       easing: "outQuad",
-    } as any);
+    };
+    const barTargets = timelineRef.current.querySelectorAll(".pt-vbar");
+    const labelTargets = timelineRef.current.querySelectorAll(".pt-vlabel");
+    if (barTargets.length > 0) animate(barTargets, barAnimation);
+    if (labelTargets.length > 0) animate(labelTargets, labelAnimation);
   }, [data, max]);
 
   return (
-    <div className="space-y-2">
+    <div ref={timelineRef} className="space-y-2">
       <div className="overflow-x-auto rounded border border-line bg-subtle/30 p-3">
         <div className="flex items-end gap-[3px] min-w-[560px] h-[180px]">
           {data.map((d) => {

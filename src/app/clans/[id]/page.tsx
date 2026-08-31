@@ -42,6 +42,7 @@ export default async function ClanDetailPage({
     pageNum,
     PAGE_SIZE,
   );
+  const allRows = await repository.listExamRecords({ clanId: clanId }, 1, total || 1);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const baseHref = examType
     ? `/clans/${clanId}?exam=${examType}`
@@ -54,6 +55,7 @@ export default async function ClanDetailPage({
       rawId={id}
       detail={detail}
       items={items}
+      mapRows={allRows.items.map(({ year, residence }) => ({ year, residence }))}
       totalPages={totalPages}
       pageNum={pageNum}
       baseHref={baseHref}
