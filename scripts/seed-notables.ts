@@ -56,15 +56,14 @@ SELECT ?person ?personLabel ?clanLabel ?desc ?birth ?death (GROUP_CONCAT(DISTINC
   ?person wdt:P31 wd:Q5 ;
           wdt:P53 ?clan .
   ?clan wdt:P31/wdt:P279* wd:Q846706 .
-  ?person schema:description ?desc .
-  FILTER(LANG(?desc) = "ko")
+  OPTIONAL { ?person schema:description ?desc . FILTER(LANG(?desc) = "ko") }
   OPTIONAL { ?person wdt:P569 ?birth. }
   OPTIONAL { ?person wdt:P570 ?death. }
   OPTIONAL { ?person wdt:P106 ?occ . }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "ko". }
 }
 GROUP BY ?person ?personLabel ?clanLabel ?desc ?birth ?death
-LIMIT 5000`;
+LIMIT 10000`;
 
   const url =
     "https://query.wikidata.org/sparql?query=" +
@@ -112,8 +111,13 @@ LIMIT 5000`;
     })
     .filter((r): r is NonNullable<typeof r> => r !== null);
 
+  const dedup = new Map<string, (typeof rows)[number]>();
+  for (const r of rows) if (!dedup.has(r.id)) dedup.set(r.id, r);
+  const deduped = [...dedup.values()];
+
   await prisma.clanNotable.deleteMany();
-  const count = await createManyChunked(prisma.clanNotable, rows);
+  const count = await createManyChunked(prisma.clanNotable, deduped);
+  console.log(`dedup: ${rows.length} -> ${deduped.length}`);
   console.log(
     `seeded ${count} notables (from ${bindings.length} wikidata results, ${existing.size} clans)`,
   );
