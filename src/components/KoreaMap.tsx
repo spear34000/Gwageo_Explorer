@@ -56,15 +56,25 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
     <div className={className}>
       <div className="relative overflow-hidden rounded border border-line bg-subtle">
         <svg viewBox="0 0 100 140" className="h-auto w-full" role="img" aria-label="한반도 거주지 분포">
-          {/* peninsula outline - simplified */}
+          {/* subtle fill - more detailed coastline */}
           <path
-            d="M 38 8 L 52 6 L 62 12 L 68 22 L 70 30 L 68 38 L 65 45 L 62 52 L 58 60 L 55 70 L 50 85 L 48 100 L 45 115 L 40 125 L 32 122 L 28 110 L 22 90 L 18 70 L 15 50 L 18 35 L 25 20 L 32 12 Z"
+            d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z"
+            fill="currentColor"
+            className="text-subtle"
+            opacity={0.45}
+          />
+          {/* coastline - detailed */}
+          <path
+            d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z"
             fill="none"
             stroke="currentColor"
-            strokeWidth="0.6"
-            className="text-line"
+            strokeWidth="0.65"
+            className="text-ink-2"
           />
+          {/* 38th parallel hint */}
+          <path d="M 14 38 L 71 38" stroke="currentColor" strokeWidth="0.25" strokeDasharray="1.2 1.2" className="text-line" opacity={0.32} />
           {/* Jeju */}
+          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="currentColor" className="text-subtle" opacity={0.5} />
           <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-line" />
           {/* bonGwan star */}
           {bonCoord && (
