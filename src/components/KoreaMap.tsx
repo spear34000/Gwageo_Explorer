@@ -54,11 +54,11 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
 
   return (
     <div className={className}>
-      <div className="relative overflow-hidden rounded border border-line bg-black">
+      <div className="relative overflow-hidden rounded border border-line bg-[#0a1628]">
         <svg viewBox="0 0 100 140" className="h-auto w-full" role="img" aria-label="한반도 거주지 분포">
           <defs>
             <clipPath id="korClip">
-              <path d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z" />
+              <path d="M 38 10 L 46 7 L 54 6 L 62 9 L 68 14 L 72 20 L 73 28 L 72 36 L 69 44 L 65 52 L 61 60 L 57 68 L 54 76 L 51 84 L 49 92 L 47 100 L 45 108 L 43 116 L 40 124 L 35 128 L 28 122 L 22 110 L 16 92 L 12 78 L 10 62 L 12 48 L 16 34 L 22 22 L 30 14 Z" />
             </clipPath>
           </defs>
           {/* satellite base - NASA Blue Marble via Wikimedia */}
@@ -66,25 +66,21 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
             href="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20Peninsula%20satellite.png"
             x="8"
             y="4"
-            width="66"
+            width="68"
             height="126"
             preserveAspectRatio="xMidYMid slice"
             clipPath="url(#korClip)"
-            opacity={0.92}
+            opacity={0.96}
           />
-          {/* fallback subtle fill if image fails */}
+          {/* crisp coastline */}
           <path
-            d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z"
+            d="M 38 10 L 46 7 L 54 6 L 62 9 L 68 14 L 72 20 L 73 28 L 72 36 L 69 44 L 65 52 L 61 60 L 57 68 L 54 76 L 51 84 L 49 92 L 47 100 L 45 108 L 43 116 L 40 124 L 35 128 L 28 122 L 22 110 L 16 92 L 12 78 L 10 62 L 12 48 L 16 34 L 22 22 L 30 14 Z"
             fill="none"
-            stroke="rgba(255,255,255,0.85)"
-            strokeWidth="0.7"
+            stroke="rgba(255,255,255,0.9)"
+            strokeWidth="0.65"
           />
           {/* Jeju */}
-          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="0.6" />
-          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="0.6" />
-          {/* Jeju */}
-          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="currentColor" className="text-subtle" opacity={0.5} />
-          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-line" />
+          <ellipse cx="42" cy="129" rx="6.5" ry="3.8" fill="none" stroke="rgba(255,255,255,0.92)" strokeWidth="0.6" />
           {/* bonGwan star - white on satellite */}
           {bonCoord && (
             <g>
