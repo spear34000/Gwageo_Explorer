@@ -29,11 +29,11 @@
 
 ## 스크린샷
 
-> `public/`에 캡처를 넣고 아래 경로를 교체하세요. 다크모드/라이트모드 각각 한 장을 권장합니다.
+> `public/screenshots/`에 실제 캡처를 넣으면 아래 이미지가 표시됩니다. 현재는 플레이스홀더입니다.
 
 | 홈 · 검색 | 본관 상세 | 인물 관계 |
 |---|---|---|
-| <img src="public/screenshots/home.png" alt="home" width="360"/> | <img src="public/screenshots/clan-detail.png" alt="clan" width="360"/> | <img src="public/screenshots/person.png" alt="person" width="360"/> |
+| <img src="https://via.placeholder.com/360x220/0e4d7a/ffffff?text=Home+%7C+%EA%B2%80%EC%83%89" alt="home" width="360"/> | <img src="https://via.placeholder.com/360x220/0e4d7a/ffffff?text=Clan+Detail" alt="clan" width="360"/> | <img src="https://via.placeholder.com/360x220/0e4d7a/ffffff?text=Person" alt="person" width="360"/> |
 
 ---
 
