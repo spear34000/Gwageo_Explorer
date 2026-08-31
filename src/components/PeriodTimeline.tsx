@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+import { animate } from "animejs";
 import { formatNumber } from "@/lib/format";
 
 interface PeriodTimelineProps {
@@ -17,22 +21,48 @@ export default function PeriodTimeline({ data, max }: PeriodTimelineProps) {
   const scale = chartMax > 0 ? chartMax : 1;
   const visible = data.filter((d) => d.value > 0);
 
+  useEffect(() => {
+    animate(".pt-bar", {
+      width: (_el: Element) => (_el as HTMLElement).dataset.w ?? "0%",
+      duration: 900,
+      // @ts-ignore
+      delay: (_el: Element, i: number) => i * 45,
+      easing: "outExpo",
+    } as any);
+    animate(".pt-label", {
+      opacity: [0, 1],
+      translateX: [-6, 0],
+      duration: 400,
+      // @ts-ignore
+      delay: (_el: Element, i: number) => i * 45 + 120,
+      easing: "outQuad",
+    } as any);
+    animate(".pt-value", {
+      opacity: [0, 1],
+      duration: 350,
+      // @ts-ignore
+      delay: (_el: Element, i: number) => i * 45 + 200,
+      easing: "outQuad",
+    } as any);
+  }, [data, max]);
+
   return (
     <div className="py-1">
       {visible.map((d) => (
         <div key={d.label} className="bar-row">
-          <span className="bar-label">{d.label}</span>
+          <span className="bar-label pt-label">{d.label}</span>
           <span
             className="bar-track"
             role="img"
             aria-label={`${d.label} ${formatNumber(d.value)}명`}
           >
             <span
-              className="bar-fill block"
+              className="bar-fill pt-bar block"
+              data-w={`${(d.value / scale) * 100}%`}
               style={{ width: `${(d.value / scale) * 100}%` }}
             />
           </span>
-          <span className="bar-value">{formatNumber(d.value)}</span>
+          <span className="bar-value pt-value">{formatNumber(d.value)}</span>
         </div>
       ))}
     </div>
