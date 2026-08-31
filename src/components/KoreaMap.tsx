@@ -56,7 +56,7 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
       <div className="relative overflow-hidden rounded">
         <svg viewBox="0 0 100 120" className="h-auto w-full" role="img" aria-label="한반도 거주지 분포">
           <image
-            href="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20Peninsula%20satellite.png"
+            href="https://cdn2.picryl.com/photo/2023/05/30/korean-peninsula-satellite-b492cc-1024.png"
             x="0"
             y="0"
             width="100"
