@@ -5,6 +5,7 @@ import { formatNumber } from "@/lib/format";
 import type { ClanDetail, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
 import ClanSummary from "@/components/ClanSummary";
 import AIClanSummary from "@/components/AIClanSummary";
+import KoreaMap from "@/components/KoreaMap";
 import PeriodTimeline from "@/components/PeriodTimeline";
 import ExamTypeTabs from "@/components/ExamTypeTabs";
 import PersonTable from "@/components/PersonTable";
@@ -55,7 +56,10 @@ export default function ClanDetailClient({
         }}
       />
 
-      <ClanSummary detail={detail} />
+      <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+        <KoreaMap residences={detail.residences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} />
+        <ClanSummary detail={detail} />
+      </div>
 
       <section>
         <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
