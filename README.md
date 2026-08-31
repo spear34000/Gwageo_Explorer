@@ -161,6 +161,17 @@ scripts/                  ingest
 
 ---
 
+## 문서
+
+- [아키텍처](docs/ARCHITECTURE.md) — 구조/데이터 흐름/렌더링
+- [데이터](docs/DATA.md) — 원천/파이프라인/스키마/검색
+- [API](docs/API.md) — 내부 API (search, ai-summary)
+- [컴포넌트](docs/COMPONENTS.md) — 컴포넌트 카탈로그
+- [배포](docs/DEPLOYMENT.md) — 로컬/프로덕션/원격
+- [개발 가이드](docs/DEVELOPMENT.md) — 스크립트/브랜치/트러블슈팅
+
+---
+
 ## 기여
 
 이슈와 PR을 환영합니다. 커밋 전 `npm run typecheck && npm run lint`를 통과시켜 주세요.
