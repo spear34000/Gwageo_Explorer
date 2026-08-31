@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum ExamType {
+  mun
+  mu
+  saengwon
+  jinsa
+}
+
+model Person {
+  id        String            @id
+  name      String
+  surname   String
+  bonGwan   String
+  clanId    String
+  residence String
+  birthYear Int?
+  deathYear Int?
+  exams     Exam[]
+  relations PersonRelation[]  @relation("from")
+  relatedBy PersonRelation[]  @relation("to")
+
+  @@index([clanId])
+}
+
+model Exam {
+  id       String   @id
+  personId String
+  type     ExamType
+  year     Int
+  kingId   String
+  grade    String
+  person   Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@index([personId])
+  @@index([kingId])
+}
+
+model PersonRelation {
+  personId        String
+  relatedPersonId String
+  type            String
+  person          Person @relation("from", fields: [personId], references: [id], onDelete: Cascade)
+  related         Person @relation("to", fields: [relatedPersonId], references: [id], onDelete: Cascade)
+
+  @@id([personId, relatedPersonId, type])
+}
+
+model ClanNotable {
+  id          String  @id
+  wikidataId  String
+  name        String
+  clanId      String
+  description String?
+  occupation  String?
+  birthYear   Int?
+  deathYear   Int?
+
+  @@index([clanId])
+}
