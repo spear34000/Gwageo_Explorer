@@ -54,53 +54,65 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
 
   return (
     <div className={className}>
-      <div className="relative overflow-hidden rounded border border-line bg-subtle">
+      <div className="relative overflow-hidden rounded border border-line bg-black">
         <svg viewBox="0 0 100 140" className="h-auto w-full" role="img" aria-label="한반도 거주지 분포">
-          {/* subtle fill - more detailed coastline */}
-          <path
-            d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z"
-            fill="currentColor"
-            className="text-subtle"
-            opacity={0.45}
+          <defs>
+            <clipPath id="korClip">
+              <path d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z" />
+            </clipPath>
+          </defs>
+          {/* satellite base - NASA Blue Marble via Wikimedia */}
+          <image
+            href="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20Peninsula%20satellite.png"
+            x="8"
+            y="4"
+            width="66"
+            height="126"
+            preserveAspectRatio="xMidYMid slice"
+            clipPath="url(#korClip)"
+            opacity={0.92}
           />
-          {/* coastline - detailed */}
+          {/* fallback subtle fill if image fails */}
           <path
             d="M 36 10 L 42 8 L 50 7 L 58 10 L 64 14 L 68 18 L 70 24 L 71 30 L 69 36 L 66 42 L 63 48 L 60 54 L 58 60 L 56 66 L 54 72 L 52 78 L 50 85 L 48 92 L 46 100 L 44 108 L 42 116 L 40 124 L 36 126 L 30 120 L 26 108 L 22 95 L 18 80 L 14 65 L 12 50 L 14 35 L 20 22 L 28 14 Z"
             fill="none"
-            stroke="currentColor"
-            strokeWidth="0.65"
-            className="text-ink-2"
+            stroke="rgba(255,255,255,0.85)"
+            strokeWidth="0.7"
           />
-          {/* 38th parallel hint */}
-          <path d="M 14 38 L 71 38" stroke="currentColor" strokeWidth="0.25" strokeDasharray="1.2 1.2" className="text-line" opacity={0.32} />
+          {/* Jeju */}
+          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="0.6" />
+          <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="0.6" />
           {/* Jeju */}
           <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="currentColor" className="text-subtle" opacity={0.5} />
           <ellipse cx="42" cy="128" rx="6" ry="3.5" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-line" />
-          {/* bonGwan star */}
+          {/* bonGwan star - white on satellite */}
           {bonCoord && (
             <g>
-              <circle cx={bonCoord[0]} cy={bonCoord[1]} r="3.2" className="fill-accent" />
-              <text x={bonCoord[0]} y={bonCoord[1] - 5} textAnchor="middle" fontSize="3.2" className="fill-accent font-bold">
+              <circle cx={bonCoord[0]} cy={bonCoord[1]} r="3.4" fill="white" stroke="#0e4d7a" strokeWidth="0.7" />
+              <circle cx={bonCoord[0]} cy={bonCoord[1]} r="1.6" className="fill-accent" />
+              <text x={bonCoord[0]} y={bonCoord[1] - 5.5} textAnchor="middle" fontSize="3.3" fill="white" stroke="black" strokeWidth="0.35" paintOrder="stroke" fontWeight={700}>
                 {bonGwan}
               </text>
             </g>
           )}
-          {/* residences */}
+          {/* residences - white with glow on satellite */}
           {top.map((r) => {
             const c = coordFor(r.residence);
             if (!c) return null;
-            const size = 1.8 + (r.count / max) * 2.8;
+            const size = 1.9 + (r.count / max) * 2.6;
             const isMain = r.residence === mainResidence;
             return (
               <g key={r.residence}>
+                <circle cx={c[0]} cy={c[1]} r={size + 1.4} fill="white" opacity={0.92} />
                 <circle
                   cx={c[0]}
                   cy={c[1]}
                   r={size}
-                  className={isMain ? "fill-accent" : "fill-ink-2"}
-                  opacity={isMain ? 0.95 : 0.72}
+                  fill={isMain ? "#0e4d7a" : "#1f2937"}
+                  stroke="white"
+                  strokeWidth="0.4"
+                  opacity={isMain ? 1 : 0.88}
                 />
-                <circle cx={c[0]} cy={c[1]} r={size + 1.2} fill="none" stroke="currentColor" strokeWidth="0.35" className={isMain ? "text-accent" : "text-ink-2"} opacity={0.45} />
               </g>
             );
           })}
