@@ -55,19 +55,13 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
     <div className={className}>
       <div className="relative overflow-hidden rounded">
         <svg viewBox="0 0 100 120" className="h-auto w-full" role="img" aria-label="한반도 거주지 분포">
-          <defs>
-            <clipPath id="korClip2">
-              <path d="M 37 8 L 46 6 L 55 5 L 64 8 L 70 14 L 74 22 L 75 32 L 73 42 L 69 50 L 64 58 L 60 66 L 56 74 L 53 82 L 51 90 L 49 98 L 47 106 L 45 114 L 42 122 L 38 128 L 32 126 L 26 118 L 20 104 L 14 88 L 10 72 L 8 56 L 10 42 L 14 30 L 20 18 L 28 10 Z" />
-            </clipPath>
-          </defs>
           <image
             href="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20Peninsula%20satellite.png"
-            x="6"
-            y="2"
-            width="70"
-            height="130"
-            preserveAspectRatio="xMidYMid slice"
-            clipPath="url(#korClip2)"
+            x="0"
+            y="0"
+            width="100"
+            height="120"
+            preserveAspectRatio="xMidYMid meet"
             opacity={1}
           />
           {/* Jeju */}
