@@ -29,11 +29,13 @@
 
 ## 스크린샷
 
-> `public/screenshots/`에 실제 캡처를 넣으면 아래 이미지가 표시됩니다. 현재는 플레이스홀더입니다.
+> `public/screenshots/`에 실제 캡처(`home.png`, `clan-detail.png`, `person.png`)를 넣으면 여기에 표시됩니다.
 
 | 홈 · 검색 | 본관 상세 | 인물 관계 |
 |---|---|---|
-| <img src="https://via.placeholder.com/360x220/0e4d7a/ffffff?text=Home+%7C+%EA%B2%80%EC%83%89" alt="home" width="360"/> | <img src="https://via.placeholder.com/360x220/0e4d7a/ffffff?text=Clan+Detail" alt="clan" width="360"/> | <img src="https://via.placeholder.com/360x220/0e4d7a/ffffff?text=Person" alt="person" width="360"/> |
+| <img src="https://placehold.co/360x220/0e4d7a/ffffff?text=Home" alt="home" width="360"/> | <img src="https://placehold.co/360x220/0e4d7a/ffffff?text=Clan" alt="clan" width="360"/> | <img src="https://placehold.co/360x220/0e4d7a/ffffff?text=Person" alt="person" width="360"/> |
+
+> 이미지가 안 보이면 브라우저 캐시를 새로고침(Ctrl+Shift+R) 해주세요. `placehold.co`는 GitHub camo 프록시에서도 안정적으로 렌더링됩니다.
 
 ---
 
