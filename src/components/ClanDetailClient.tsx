@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { animate } from "animejs";
 import { formatNumber } from "@/lib/format";
 import type { ClanDetail, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
 import ClanSummary from "@/components/ClanSummary";
@@ -34,34 +36,63 @@ export default function ClanDetailClient({
   activeExam,
   timelineMax,
 }: Props) {
+  useEffect(() => {
+    animate(".bar-row", {
+      opacity: [0, 1],
+      translateY: [4, 0],
+      duration: 500,
+      // @ts-ignore animejs delay type
+      delay: (_el: Element, i: number) => i * 35,
+      easing: "outQuad",
+    } as any);
+    animate(".data-table tbody tr", {
+      opacity: [0, 1],
+      translateY: [6, 0],
+      duration: 380,
+      // @ts-ignore animejs delay type
+      delay: (_el: Element, i: number) => i * 28,
+      easing: "outQuad",
+    } as any);
+    animate("[data-animate='fade']", {
+      opacity: [0, 1],
+      translateY: [8, 0],
+      duration: 480,
+      // @ts-ignore animejs delay type
+      delay: (_el: Element, i: number) => i * 55,
+      easing: "outQuad",
+    } as any);
+  }, [clanId]);
+
   return (
     <div className="space-y-8">
-      <div>
+      <div data-animate="fade">
         <Link href="/clans" className="text-sm">
           ← 본관 목록
         </Link>
         <h1 className="mt-1 font-display text-2xl font-bold">{detail.name}</h1>
       </div>
 
-      <AIClanSummary
-        clanId={clanId}
-        clanName={detail.name}
-        rank={detail.rank}
-        stats={{
-          total: detail.total,
-          mun: detail.mun,
-          mu: detail.mu,
-          saengwon: detail.saengwon,
-          jinsa: detail.jinsa,
-        }}
-      />
+      <div data-animate="fade">
+        <AIClanSummary
+          clanId={clanId}
+          clanName={detail.name}
+          rank={detail.rank}
+          stats={{
+            total: detail.total,
+            mun: detail.mun,
+            mu: detail.mu,
+            saengwon: detail.saengwon,
+            jinsa: detail.jinsa,
+          }}
+        />
+      </div>
 
-      <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+      <div data-animate="fade" className="grid gap-6 lg:grid-cols-[300px_1fr]">
         <KoreaMap residences={detail.residences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} />
         <ClanSummary detail={detail} />
       </div>
 
-      <section>
+      <section data-animate="fade">
         <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
         <div className="mb-3 flex gap-px">
           {detail.byKing.map((k) => {
@@ -88,12 +119,12 @@ export default function ClanDetailClient({
         />
       </section>
 
-      <section>
+      <section data-animate="fade">
         <h2 className="mb-3 font-display text-lg">시험 종류</h2>
         <ExamTypeTabs counts={detail.examTypeStats as ExamTypeStat[]} active={activeExam} baseHref={`/clans/${rawId}`} />
       </section>
 
-      <section>
+      <section data-animate="fade">
         <h2 className="mb-3 font-display text-lg">합격자 목록</h2>
         <PersonTable rows={items} />
         <div className="mt-4">
@@ -101,7 +132,7 @@ export default function ClanDetailClient({
         </div>
       </section>
 
-      <section>
+      <section data-animate="fade">
         <h2 className="mb-3 font-display text-lg">주요 거주지</h2>
         <div className="table-scroll">
           <table className="data-table">

@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { animate } from "animejs";
+
 interface Residence {
   residence: string;
   count: number;
@@ -51,12 +54,23 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
   const max = Math.max(...top.map((r) => r.count), 1);
   const bonCoord = PLACE_COORDS[bonGwan] ?? null;
 
+  useEffect(() => {
+    animate(".korea-dot", {
+      scale: [0, 1],
+      opacity: [0, 1],
+      duration: 600,
+      // @ts-ignore animejs delay type
+      delay: (_el: Element, i: number) => i * 80,
+      easing: "outBack",
+    } as any);
+  }, [bonGwan, mainResidence]);
+
   return (
     <div className={className}>
       <div className="relative overflow-hidden rounded">
         <svg viewBox="0 0 100 120" className="h-auto w-full" role="img" aria-label="한반도 거주지 분포">
           <image
-            href="https://upload.wikimedia.org/wikipedia/commons/8/8e/Korean_Peninsula_satellite.png"
+            href="https://commons.wikimedia.org/wiki/Special:FilePath/Korean%20Peninsula%20satellite.png"
             x="0"
             y="0"
             width="100"
@@ -68,7 +82,7 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
           <ellipse cx="43" cy="115" rx="5" ry="2.8" fill="none" stroke="white" strokeWidth="0.5" opacity={0.9} />
           {/* bonGwan */}
           {bonCoord && (
-            <g>
+            <g className="korea-dot">
               <circle cx={bonCoord[0]} cy={bonCoord[1]} r="3.6" fill="white" stroke="#0e4d7a" strokeWidth="0.8" />
               <circle cx={bonCoord[0]} cy={bonCoord[1]} r="1.7" fill="#0e4d7a" />
               <text x={bonCoord[0]} y={bonCoord[1] - 5.8} textAnchor="middle" fontSize="3.4" fill="white" stroke="black" strokeWidth="0.4" paintOrder="stroke" fontWeight={700}>
@@ -83,7 +97,7 @@ export default function KoreaMap({ residences, bonGwan, mainResidence, className
             const size = 1.9 + (r.count / max) * 2.4;
             const isMain = r.residence === mainResidence;
             return (
-              <g key={r.residence}>
+              <g key={r.residence} className="korea-dot">
                 <circle cx={c[0]} cy={c[1]} r={size + 1.5} fill="white" opacity={0.95} />
                 <circle
                   cx={c[0]}
