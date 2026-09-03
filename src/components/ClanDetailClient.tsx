@@ -159,19 +159,6 @@ export default function ClanDetailClient({
       </section>
 
       <section data-animate="fade">
-        <h2 className="mb-3 font-display text-lg">시험 종류</h2>
-        <ExamTypeTabs counts={detail.examTypeStats as ExamTypeStat[]} active={activeExam} baseHref={`/clans/${rawId}`} />
-      </section>
-
-      <section data-animate="fade">
-        <h2 className="mb-3 font-display text-lg">합격자 목록</h2>
-        <PersonTable rows={items} />
-        <div className="mt-4">
-          <Pagination page={pageNum} totalPages={totalPages} baseHref={baseHref} />
-        </div>
-      </section>
-
-      <section data-animate="fade">
         <h2 className="mb-3 font-display text-lg">주요 거주지</h2>
         <div className="table-scroll">
           <table className="data-table">
@@ -180,9 +167,7 @@ export default function ClanDetailClient({
               <tr>
                 <th scope="col">거주지</th>
                 <th scope="col">비율</th>
-                <th scope="col" className="num">
-                  합격자 수
-                </th>
+                <th scope="col" className="num">합격자 수</th>
               </tr>
             </thead>
             <tbody>
@@ -205,6 +190,20 @@ export default function ClanDetailClient({
           </table>
         </div>
       </section>
+
+      <section data-animate="fade">
+        <h2 className="mb-3 font-display text-lg">시험 종류</h2>
+        <ExamTypeTabs counts={detail.examTypeStats as ExamTypeStat[]} active={activeExam} baseHref={`/clans/${rawId}`} />
+      </section>
+
+      <section data-animate="fade">
+        <h2 className="mb-3 font-display text-lg">합격자 목록</h2>
+        <PersonTable rows={items} />
+        <div className="mt-4">
+          <Pagination page={pageNum} totalPages={totalPages} baseHref={baseHref} />
+        </div>
+      </section>
+
     </div>
   );
 }
