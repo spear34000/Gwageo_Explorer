@@ -61,7 +61,7 @@ dev3100.err
 
 # Android local/build outputs
 /android/local.properties
-/artifacts/*.apk
+/artifacts/
 /android/keystore/
 *.jks
 *.keystore
