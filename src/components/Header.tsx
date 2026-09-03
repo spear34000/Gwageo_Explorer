@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
@@ -26,7 +27,7 @@ export default function Header() {
           className="group flex shrink-0 items-center gap-2 font-display text-foreground no-underline hover:no-underline"
           aria-label="과거탐색기 홈"
         >
-          <img
+          <Image
             src="/gwageo-logo.png"
             alt=""
             width={32}
