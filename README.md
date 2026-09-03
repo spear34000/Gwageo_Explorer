@@ -1,4 +1,8 @@
-# 과거탐색기 (Gwageo Explorer)
+<p align="center">
+  <img src="public/gwageo-logo.png" alt="과거탐색기 로고" width="112" />
+</p>
+
+<h1 align="center">과거탐색기 (Gwageo Explorer)</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-16.3.1-000000?logo=next.js&logoColor=white" alt="Next.js 16.3.1" />

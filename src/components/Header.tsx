@@ -23,10 +23,20 @@ export default function Header() {
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:flex-nowrap sm:gap-8 sm:px-6">
         <Link
           href="/"
-          className="font-display text-xl font-bold tracking-tight text-foreground no-underline hover:no-underline"
+          className="group flex shrink-0 items-center gap-2 font-display text-foreground no-underline hover:no-underline"
           aria-label="과거탐색기 홈"
         >
-          과거탐색기
+          <img
+            src="/gwageo-logo.png"
+            alt=""
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-lg border border-line object-cover shadow-sm transition-transform group-hover:scale-105"
+          />
+          <span className="flex flex-col leading-none">
+            <span className="text-lg font-bold tracking-tight">과거탐색기</span>
+            <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-ink-3">Gwageo Explorer</span>
+          </span>
         </Link>
         <nav aria-label="주요 내비게이션" className="order-3 flex basis-full flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-line pt-2 sm:order-none sm:basis-auto sm:border-0 sm:pt-0 sm:gap-x-4">
           {NAV_ITEMS.map((item) => (
