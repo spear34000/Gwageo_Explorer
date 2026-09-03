@@ -69,13 +69,34 @@ docs/                    아키텍처·배포·데이터 라이선스
 
 수집 흐름은 `ingest-real-data.mjs → real-data.json → seed.ts → SQLite`다. 본관 조사 결과는 `generate-clan-research.mjs`와 `backfill-clan-locations.ts`로 재생성할 수 있으며, `dataset-manifest.json`에 해시·출처·수집일을 기록한다. 84,525건 집계와 본관 요약은 `rowsPromise`·`summariesPromise`로 캐시하여 요청마다 재계산하지 않는다.
 
+### 데이터 계약
+
+| 계약 | 입력 | 출력 | 실패 처리 |
+|---|---|---|---|
+| `DataRepository` | slug, 검색어, 페이지·필터 | 도메인 타입(`ClanDetail`, `Person`, `ClanLocation`) | 빈 목록 또는 명시적 not-found |
+| `getClanLocations` | `clanId` | 위치·근거·상태 배열 | 좌표 없는 레코드는 지도 레이어 제외 |
+| 조사 파이프라인 | 공식 원문과 허용 라이선스 | `ClanResearch`·`ClanLocationEvidence` | 상태를 `no_official_source`/`license_blocked`로 기록 |
+| AI Route Handler | clanId, tone | `text/event-stream` | API 키·모델 오류를 안전한 4xx/5xx로 반환 |
+
+원자료의 한 행은 seed 단계에서 중복 제거·문자열 정규화 후 `Person`과 `Exam`으로 분리된다. 관계는 양방향으로 저장하고 화면에서 역방향 라벨을 계산한다. 조사 JSON은 사람이 검토할 수 있는 배열 형식을 유지하며, manifest 해시가 바뀌면 감사 스크립트가 재실행된다.
+
 ## 5. 요청 흐름과 캐싱
 
 동적 라우트의 `params`와 `searchParams`는 Promise이므로 서버에서 `await`한다. 한글 slug는 `decodeURIComponent` 후 repository에 전달한다. 검색·목록은 서버 렌더링하고, 필터·지도·AI 스트림은 클라이언트 상태로 처리한다. AI 결과는 clan·tone별 `sessionStorage`에 캐시하며 사용자가 재생성할 때만 새 요청을 보낸다.
 
+### 페이지 요청 순서
+
+1. Next.js가 라우트의 Promise 파라미터를 해석하고 slug를 디코딩한다.
+2. 서버 컴포넌트가 `getRepository()`를 통해 필요한 집계와 상세 데이터를 한 번 조회한다.
+3. 직렬화 가능한 도메인 타입만 클라이언트 컴포넌트에 전달한다.
+4. 클라이언트는 지도 필터·모션·SSE를 담당하며 서버 데이터베이스에 직접 접근하지 않는다.
+5. 오류·빈 상태·근거 부족 상태를 UI에서 구분해 표시한다.
+
 ## 6. 지도 렌더링
 
 `getClanLocations(clanId)`가 좌표와 조사 근거를 반환한다. 발생지(보라색), 검증된 거주지(파란색), 검토 중·미확인(주황색), 비활성/근거 없음(회색)을 구분한다. 남북을 포함한 한반도 bounds를 고정하고 실제 위·경도를 Web Mercator로 투영한다. SSR과 클라이언트가 동일한 반올림 좌표·크기 문자열을 사용해 hydration mismatch를 방지한다.
+
+지도 타일은 화면 배경일 뿐 애플리케이션 데이터로 저장하지 않는다. 마커 팝업은 현재 지명·역사 지명·위치 유형·조사 상태·기관·원문 URL을 보여준다. 기본 레이어는 `verified`를 우선하며 검토 중 레이어는 사용자가 명시적으로 켤 때만 노출한다. 타일 제공자 attribution과 위치 데이터 출처 attribution은 하단 바에서 분리한다.
 
 ## 7. AI와 보안
 
@@ -92,6 +113,15 @@ android\gradlew.bat -p android assembleRelease --no-daemon --console=plain
 ```
 
 `app-release-unsigned.apk`는 release 최적화만 적용된 unsigned 산출물이다. 스토어 배포에는 저장소 밖의 운영 keystore와 서명 설정이 필요하다.
+
+### 배포 경계
+
+| 대상 | 포함 | 제외/보호 |
+|---|---|---|
+| Git 저장소 | 소스, 스키마, 정규화 데이터, 감사 스크립트, 문서 | `.env`, DB 파일, keystore, APK 산출물 |
+| 웹 서버 | `.next/server`, `.next/static`, `public`, 허용 환경변수 | API 키 로그, 원문·사진 복제 |
+| GitHub Release | 서명된 APK와 한글 설치·체크섬 안내 | keystore와 비밀번호 |
+| Android 앱 | Capacitor 네이티브 셸과 원격 HTTPS URL | 서버 비밀값·로컬 DB |
 
 ## 9. 검증과 운영 원칙
 
