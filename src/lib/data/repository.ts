@@ -1,6 +1,7 @@
 import type {
   ClanComparison,
   ClanDetail,
+  AgeBandStat,
   ClanLocation,
   ClanSearchResult,
   ClanSummary,
@@ -129,11 +130,26 @@ function buildClanDetail(clan: ClanSummary, rows: ExamRecordRow[]): ClanDetail {
 
   const kingCounts = new Map<string, number>();
   const residenceCounts = new Map<string, number>();
+  const ageBands: AgeBandStat[] = [
+    { label: "20세 미만", min: 0, max: 19, count: 0, ratio: 0 },
+    { label: "20–29세", min: 20, max: 29, count: 0, ratio: 0 },
+    { label: "30–39세", min: 30, max: 39, count: 0, ratio: 0 },
+    { label: "40–49세", min: 40, max: 49, count: 0, ratio: 0 },
+    { label: "50세 이상", min: 50, max: null, count: 0, ratio: 0 },
+  ];
   for (const row of clanRows) {
     kingCounts.set(row.kingId, (kingCounts.get(row.kingId) ?? 0) + 1);
     const res = row.residence || "기록 없음";
     residenceCounts.set(res, (residenceCounts.get(res) ?? 0) + 1);
+    if (row.birthYear !== undefined) {
+      const age = row.year - row.birthYear;
+      const band = ageBands.find((candidate) => age >= candidate.min && (candidate.max === null || age <= candidate.max));
+      if (band) band.count += 1;
+    }
   }
+
+  const ageTotal = ageBands.reduce((sum, band) => sum + band.count, 0);
+  for (const band of ageBands) band.ratio = ageTotal > 0 ? band.count / ageTotal : 0;
 
   const byKing: KingCount[] = KINGS.map((king) => ({
     kingId: king.id,
@@ -164,6 +180,7 @@ function buildClanDetail(clan: ClanSummary, rows: ExamRecordRow[]): ClanDetail {
     byKing,
     examTypeStats,
     residences,
+    ageStats: ageBands,
     peakKing,
     mainResidence: residences[0]?.residence ?? "기록 없음",
   };
@@ -302,6 +319,7 @@ class MockDataRepository extends BaseClanRepository {
       reignYear: reignYear(exam.kingId, exam.year),
       grade: exam.grade,
       residence: person?.residence ?? "",
+      birthYear: person?.birthYear,
     };
   }).sort(
     (a, b) =>
@@ -405,6 +423,7 @@ class PrismaDataRepository extends BaseClanRepository {
         reignYear: reignYear(exam.kingId, exam.year),
         grade: exam.grade,
         residence: person.residence,
+        birthYear: person.birthYear ?? undefined,
       };
     });
     rows.sort(

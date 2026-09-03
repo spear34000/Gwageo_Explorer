@@ -114,11 +114,21 @@ export interface ExamTypeStat {
   ratio: number;
 }
 
+/** 합격 당시 출생연도가 확인되는 기록의 연령대 분포 */
+export interface AgeBandStat {
+  label: string;
+  min: number;
+  max: number | null;
+  count: number;
+  ratio: number;
+}
+
 /** 본관 상세 (상세 페이지에 사용) */
 export interface ClanDetail extends ClanSummary {
   byKing: KingCount[];
   examTypeStats: ExamTypeStat[];
   residences: { residence: string; count: number }[];
+  ageStats: AgeBandStat[];
   /** 합격자가 가장 많이 나온 왕 */
   peakKing: KingCount;
   /** 가장 흔한 거주지 */
@@ -167,6 +177,7 @@ export interface ExamRecordRow {
   clanName: string;
   type: ExamType;
   year: number;
+  birthYear?: number;
   kingId: string;
   kingName: string;
   /** 재위 연수 (ex. "12") */

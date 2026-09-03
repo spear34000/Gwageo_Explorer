@@ -6,6 +6,7 @@ import { animate, type AnimationParams, type FunctionValue } from "animejs";
 import { formatNumber } from "@/lib/format";
 import { countResidenceRecordsThroughYear, getMapYearRange, summarizeResidencesThroughYear, type MapRecord } from "@/lib/historical-places/residence-timeline";
 import type { ClanDetail, ClanLocation, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
+import AgeDistribution from "./AgeDistribution";
 import ClanSummary from "@/components/ClanSummary";
 import AIClanSummary from "@/components/AIClanSummary";
 import KoreaMap from "@/components/KoreaMap";
@@ -107,7 +108,7 @@ export default function ClanDetailClient({
         />
       </div>
 
-      <div data-animate="fade" className="grid gap-6 lg:grid-cols-[300px_1fr]">
+      <div data-animate="fade" className="grid items-start gap-6 lg:grid-cols-[300px_1fr]">
         <div>
           <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
             {(["all", "bonGwan", "residences"] as const).map((mode) => (
@@ -150,6 +151,11 @@ export default function ClanDetailClient({
           }))}
           max={timelineMax}
         />
+      </section>
+
+      <section data-animate="fade">
+        <h2 className="mb-3 font-display text-lg">합격 연령</h2>
+        <AgeDistribution stats={detail.ageStats} />
       </section>
 
       <section data-animate="fade">
