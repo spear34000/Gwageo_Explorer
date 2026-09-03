@@ -125,6 +125,37 @@ export interface ClanDetail extends ClanSummary {
   mainResidence: string;
 }
 
+export type ClanResearchStatus =
+  | "verified"
+  | "ambiguous"
+  | "no_official_source"
+  | "outside_korea"
+  | "review_required"
+  | "license_blocked";
+
+export interface ClanLocationEvidence {
+  id: string;
+  provider: string;
+  title: string;
+  url: string;
+  licenseCode: string;
+  licenseUrl: string;
+  evidenceSummary: string;
+}
+
+export interface ClanLocation {
+  id: string;
+  clanId: string;
+  kind: "origin" | "administrative" | "settlement";
+  name: string;
+  modernArea: string;
+  latitude: number;
+  longitude: number;
+  status: ClanResearchStatus;
+  note?: string;
+  evidence: ClanLocationEvidence[];
+}
+
 /** 합격 기록 행 (합격자 목록 테이블에 사용) */
 export interface ExamRecordRow {
   id: string; // exam id
@@ -217,6 +248,8 @@ export interface DataRepository {
   listClans(): Promise<ClanSummary[]>;
   /** 본관 상세. 없으면 null */
   getClan(id: string): Promise<ClanDetail | null>;
+  /** Publicly displayable, evidence-backed locations for a clan */
+  getClanLocations(id: string): Promise<ClanLocation[]>;
   /** 기준 컬럼으로 정렬한 본관 순위 */
   clanRanking(sortBy: ExamColumn): Promise<ClanSummary[]>;
   /** 한글 검색 (정규화 + exact match 우선) */

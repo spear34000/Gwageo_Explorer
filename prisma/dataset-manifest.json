@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-01",
+  "codeLicense": "MIT",
+  "datasets": [
+    {
+      "id": "aks-gwageo-records",
+      "path": "prisma/real-data.json",
+      "source": "한국학중앙연구원 조선조문과급제자 (공공데이터포털 15052752)",
+      "sourceUrl": "https://www.data.go.kr/data/15052752/fileData.do",
+      "distribution": "included",
+      "licenseCode": "PUBLIC-DATA-NO-RESTRICTIONS",
+      "licenseUrl": "https://www.data.go.kr/data/15052752/fileData.do",
+      "redistributable": true,
+      "commercialUse": "allowed",
+      "derivatives": "allowed",
+      "attribution": "한국학중앙연구원, 공공데이터포털",
+      "sha256": "4962b59ef97f00711e3f8cdcc49e9b729fa531676025b91fbf3301b38b96b459"
+    },
+    {
+      "id": "osm-tiles",
+      "path": "runtime",
+      "source": "OpenStreetMap contributors",
+      "sourceUrl": "https://www.openstreetmap.org/copyright",
+      "licenseCode": "ODbL-1.0",
+      "licenseUrl": "https://osmfoundation.org/wiki/Licence",
+      "redistributable": false,
+      "commercialUse": "provider-terms",
+      "derivatives": "provider-terms",
+      "attribution": "© OpenStreetMap contributors",
+      "sha256": null
+    },
+    {
+      "id": "aks-bongwan-directory-candidate",
+      "path": "import-only",
+      "source": "한국학중앙연구원 한국학자료포털 성씨·본관 데이터베이스",
+      "sourceUrl": "https://kostma.aks.ac.kr/eng/sub/gatewayServiceView.aspx?gwCorpsId=3&gwServiceId=5",
+      "distribution": "import-only",
+      "licenseCode": "UNKNOWN-REUSE-TERMS",
+      "licenseUrl": "https://kostma.aks.ac.kr/",
+      "redistributable": false,
+      "commercialUse": "unknown",
+      "derivatives": "unknown",
+      "attribution": "한국학중앙연구원",
+      "sha256": null,
+      "note": "공식 검색 서비스는 확인했으나 공개 재배포·변경 허가를 확인하지 못해 저장소와 배포 번들에서 제외함"
+    }
+  ]
+}

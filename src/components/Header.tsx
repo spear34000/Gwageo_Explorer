@@ -20,7 +20,7 @@ export default function Header() {
 
   return (
     <header className="border-b border-line bg-background">
-      <div className="mx-auto flex max-w-5xl items-baseline gap-6 px-4 py-3 sm:gap-8 sm:px-6">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:flex-nowrap sm:gap-8 sm:px-6">
         <Link
           href="/"
           className="font-display text-xl font-bold tracking-tight text-foreground no-underline hover:no-underline"
@@ -28,7 +28,7 @@ export default function Header() {
         >
           과거탐색기
         </Link>
-        <nav aria-label="주요 내비게이션" className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <nav aria-label="주요 내비게이션" className="order-3 flex basis-full flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-line pt-2 sm:order-none sm:basis-auto sm:border-0 sm:pt-0 sm:gap-x-4">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}

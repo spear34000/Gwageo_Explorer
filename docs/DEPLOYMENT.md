@@ -10,12 +10,12 @@ npm run dev              # http://localhost:3000 (Turbopack)
 ```
 
 - `DATA_SOURCE=mock`이면 DB 없이 동작: `DATA_SOURCE=mock npm run dev`
-- `Turbopack`은 `next dev`에서는 정상, `next build`에서만 `.omo/codegraph` 버그로 패닉 → `next build --webpack` 필수
+- 현재 Next.js 16.3 기준으로 `npm run build`가 기본 빌드 명령이다. CI에서는 빌드 전에 데이터·출처 감사도 실행한다.
 
 ## 프로덕션 빌드
 
 ```bash
-npm run build -- --webpack
+npm run build
 npm run start            # http://localhost:3000
 ```
 
@@ -28,10 +28,13 @@ npm run start            # http://localhost:3000
 # AI 요약 (선택, 없으면 오류 문구만 표시)
 NVIDIA_API_KEY=nvapi-...
 NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
-NVIDIA_MODEL=nvidia/nemotron-3-nano-30b-a3b
+NVIDIA_MODEL=nvidia/nemotron-3.5-lightning-30b-a3b
 
-# 데이터 소스 (선택)
+# 데이터 소스 (선택, 공개 배포 기본값은 실제 DB)
 DATA_SOURCE=mock
+
+# 지도 타일 제공자(공개 배포 시 약관에 맞는 제공자로 지정)
+NEXT_PUBLIC_MAP_TILE_URL=https://tile.openstreetmap.org/{z}/{x}/{y}.png
 ```
 
 - `NVIDIA_API_KEY`는 서버(`route.ts`)에서만 사용, 클라이언트로 노출되지 않음
@@ -43,13 +46,15 @@ DATA_SOURCE=mock
 
 ```bash
 # 로컬에서 빌드 후 전송 (예시)
-npm run build -- --webpack
+npm run build
 scp -r .next package.json package-lock.json prisma public user@host:/app
 ssh user@host "cd /app && npm ci --omit=dev && npx prisma generate && npx prisma db push && npx prisma db seed && pm2 restart gwageo"
 ```
 
 - `prisma/dev.db`는 gitignore이므로 별도 전송 또는 원격에서 `db:seed` 필요
 - `allowedDevOrigins: ["127.0.0.1"]`는 `next.config.ts`에 설정 (HMR 크로스 오리진)
+- 공개 배포 전 `npm run audit:clans && npm run audit:sources && npm run audit:release && npm run audit:location-evidence`를 통과시키고,
+  OSM 저작권 표시가 보이는지 확인한다.
 
 ## GitHub
 
@@ -84,6 +89,8 @@ CMD ["npm", "start"]
 
 - [ ] `npm run typecheck` 통과
 - [ ] `npm run lint` 통과
-- [ ] `npm run build -- --webpack` 통과
+- [ ] `npm run build` 통과
+- [ ] `npm run audit:clans`, `npm run audit:sources`, `npm run audit:release` 통과
+- [ ] `npm run audit:location-evidence` 통과 (검증 위치 1,000건 이상)
 - [ ] `http://localhost:3000`에서 검색/상세/랭킹 동작 확인
 - [ ] `.env` 없이도 AI 카드가 오류 문구를 정상 표시하는지 확인

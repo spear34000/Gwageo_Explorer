@@ -37,12 +37,15 @@ export default async function ClanDetailPage({
   const examType = activeExam === "all" ? undefined : activeExam;
 
   const pageNum = normalizePage(sp.page);
-  const { items, total } = await repository.listExamRecords(
-    { clanId: clanId, examType },
-    pageNum,
-    PAGE_SIZE,
-  );
-  const allRows = await repository.listExamRecords({ clanId: clanId }, 1, total || 1);
+  const [{ items, total }, allRows, clanLocations] = await Promise.all([
+    repository.listExamRecords(
+      { clanId: clanId, examType },
+      pageNum,
+      PAGE_SIZE,
+    ),
+    repository.listExamRecords({ clanId: clanId }, 1, detail.total || 1),
+    repository.getClanLocations(clanId),
+  ]);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const baseHref = examType
     ? `/clans/${clanId}?exam=${examType}`
@@ -56,6 +59,7 @@ export default async function ClanDetailPage({
       detail={detail}
       items={items}
       mapRows={allRows.items.map(({ year, residence }) => ({ year, residence }))}
+      clanLocations={clanLocations}
       totalPages={totalPages}
       pageNum={pageNum}
       baseHref={baseHref}

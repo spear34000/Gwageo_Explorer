@@ -1,6 +1,7 @@
 import type {
   ClanComparison,
   ClanDetail,
+  ClanLocation,
   ClanSearchResult,
   ClanSummary,
   DataRepository,
@@ -19,6 +20,9 @@ import { CLAN_ROSTER } from "./clan-roster";
 import { searchClansIn } from "../search";
 import { EXAM_SEEDS, PERSON_SEEDS, RELATION_SEEDS } from "./mock-data";
 import { prisma } from "./db";
+import fs from "node:fs";
+import path from "node:path";
+import { isValidRedistributableEvidence } from "./clan-research";
 
 const RELATION_LABELS: Record<string, string> = {
   father: "아버지",
@@ -167,6 +171,7 @@ function buildClanDetail(clan: ClanSummary, rows: ExamRecordRow[]): ClanDetail {
 
 abstract class BaseClanRepository implements DataRepository {
   abstract readonly isDemoData: boolean;
+  abstract getClanLocations(id: string): Promise<ClanLocation[]>;
 
   protected abstract loadRows(): Promise<ExamRecordRow[]>;
   protected abstract resolveClanName(clanId: string): string;
@@ -366,6 +371,10 @@ class MockDataRepository extends BaseClanRepository {
   async popularSearches(): Promise<string[]> {
     return ["안동 김씨", "전주 이씨", "김해 김씨", "안동 권씨"];
   }
+
+  async getClanLocations(): Promise<ClanLocation[]> {
+    return [];
+  }
 }
 
 /** Prisma/SQLite 기반 저장소. 실제 운영 경로 (DB 시드 후 사용) */
@@ -488,6 +497,37 @@ class PrismaDataRepository extends BaseClanRepository {
       .slice(0, 6)
       .map((c) => c.name);
   }
+
+  async getClanLocations(id: string): Promise<ClanLocation[]> {
+    const rows = await prisma.clanLocation.findMany({
+      where: { clanId: id, status: { in: ["verified", "review_required"] } },
+      include: { evidence: true },
+      orderBy: { name: "asc" },
+    });
+    return rows
+      .filter((row) => Number.isFinite(row.latitude) && Number.isFinite(row.longitude) && row.latitude >= 30 && row.latitude <= 44 && row.longitude >= 123 && row.longitude <= 132)
+      .filter((row) => row.evidence.some((item) => isValidRedistributableEvidence({ ...item, retrievedAt: item.retrievedAt.toISOString().slice(0, 10) })))
+      .map((row) => ({
+        id: row.id,
+        clanId: row.clanId,
+        kind: row.kind as ClanLocation["kind"],
+        name: row.name,
+        modernArea: row.modernArea,
+        latitude: row.latitude,
+        longitude: row.longitude,
+        status: row.status as ClanLocation["status"],
+        note: row.note ?? undefined,
+        evidence: row.evidence.map((item) => ({
+          id: item.id,
+          provider: item.provider,
+          title: item.title,
+          url: item.url,
+          licenseCode: item.licenseCode,
+          licenseUrl: item.licenseUrl,
+          evidenceSummary: item.evidenceSummary,
+        })),
+      }));
+  }
 }
 
 let instance: DataRepository | null = null;
@@ -499,8 +539,9 @@ let instance: DataRepository | null = null;
  */
 export function getRepository(): DataRepository {
   if (!instance) {
+    const hasLocalDatabase = fs.existsSync(path.join(process.cwd(), "prisma", "dev.db"));
     instance =
-      process.env.DATA_SOURCE === "mock"
+      process.env.DATA_SOURCE === "mock" || (process.env.DATA_SOURCE !== "prisma" && !hasLocalDatabase)
         ? new MockDataRepository()
         : new PrismaDataRepository();
   }

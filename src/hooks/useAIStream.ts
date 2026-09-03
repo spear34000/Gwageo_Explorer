@@ -3,6 +3,17 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+const MAX_AI_TEXT_LENGTH = 420;
+
+function limitText(text: string): string {
+  if (text.length <= MAX_AI_TEXT_LENGTH) return text;
+  const clipped = text.slice(0, MAX_AI_TEXT_LENGTH);
+  const koreanSentenceEnd = clipped.lastIndexOf("다.");
+  const punctuationEnd = Math.max(clipped.lastIndexOf("."), clipped.lastIndexOf("!"), clipped.lastIndexOf("?"));
+  const sentenceEnd = koreanSentenceEnd > punctuationEnd ? koreanSentenceEnd + 1 : punctuationEnd;
+  return (sentenceEnd >= 80 ? clipped.slice(0, sentenceEnd + 1) : clipped).trim();
+}
+
 function parseReview(text: string): { punchline: string; summary: string } {
   const lines = text
     .split("\n")
@@ -28,6 +39,7 @@ export function useAIStream(
   onStreamStart?: () => void,
 ) {
   const abortRef = useRef<AbortController | null>(null);
+  const forceNextRef = useRef(false);
   const [displayedText, setDisplayedText] = useState("");
   const [thinking, setThinking] = useState(true);
   const [punchline, setPunchline] = useState<string | null>(null);
@@ -36,6 +48,22 @@ export function useAIStream(
 
   const fetchSummary = useCallback(
     async (t: string) => {
+      const cacheKey = `ai-summary:${clanId}`;
+      if (!forceNextRef.current && typeof window !== "undefined") {
+        const cached = window.sessionStorage.getItem(cacheKey);
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached) as { punchline: string; summary: string };
+            setPunchline(parsed.punchline);
+            setSummary(parsed.summary);
+            setThinking(false);
+            return;
+          } catch {
+            window.sessionStorage.removeItem(cacheKey);
+          }
+        }
+      }
+      forceNextRef.current = false;
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
@@ -90,7 +118,7 @@ export function useAIStream(
               const delta = parsed.choices?.[0]?.delta;
               if (!delta) continue;
               if (delta.content) {
-                contentText += delta.content;
+                contentText = limitText(contentText + delta.content);
                 setDisplayedText(contentText);
                 setThinking(false);
                 signalStart();
@@ -106,6 +134,7 @@ export function useAIStream(
           const parsed = parseReview(contentText);
           setPunchline(parsed.punchline);
           setSummary(parsed.summary);
+          if (typeof window !== "undefined") window.sessionStorage.setItem(cacheKey, JSON.stringify(parsed));
           setDisplayedText("");
           signalStart();
         } else {
@@ -129,5 +158,9 @@ export function useAIStream(
     return () => abortRef.current?.abort();
   }, [tone, fetchSummary]);
 
-  return { displayedText, thinking, punchline, summary, failed, fetchSummary };
+  const refresh = useCallback(() => {
+    forceNextRef.current = true;
+  }, []);
+
+  return { displayedText, thinking, punchline, summary, failed, fetchSummary, refresh };
 }

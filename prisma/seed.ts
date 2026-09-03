@@ -28,6 +28,9 @@ async function createManyChunked<T>(
 
 async function main() {
   const file = path.join(__dirname, "real-data.json");
+  if (!fs.existsSync(file)) {
+    throw new Error("prisma/real-data.json is an external rights-gated dataset. Import the official source locally before seeding, or use DATA_SOURCE=mock.");
+  }
   const data = JSON.parse(fs.readFileSync(file, "utf8")) as {
     persons: {
       id: string;
@@ -53,10 +56,28 @@ async function main() {
       type: string;
     }[];
   };
+  const locations = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "clan-research.json"), "utf8"),
+  ) as {
+    records: Array<{
+      clanId: string; bonGwan: string; surname: string; status: string; note?: string;
+      locations: Array<{
+        id: string; kind: string; name: string; modernArea: string;
+        latitude: number; longitude: number; status: string; note?: string;
+        evidence: Array<{
+          id: string; provider: string; title: string; url: string; licenseCode: string;
+          licenseUrl: string; retrievedAt: string; evidenceSummary: string; contentHash: string;
+        }>;
+      }>;
+    }>;
+  };
 
   await prisma.exam.deleteMany();
   await prisma.personRelation.deleteMany();
   await prisma.person.deleteMany();
+  await prisma.clanLocationEvidence.deleteMany();
+  await prisma.clanLocation.deleteMany();
+  await prisma.clanResearch.deleteMany();
 
   const persons = await createManyChunked(
     prisma.person,
@@ -73,8 +94,54 @@ async function main() {
   );
   const exams = await createManyChunked(prisma.exam, data.exams);
   const relations = await createManyChunked(prisma.personRelation, data.relations);
+  const researches = await createManyChunked(
+    prisma.clanResearch,
+    locations.records.map((record) => ({
+      clanId: record.clanId,
+      bonGwan: record.bonGwan,
+      surname: record.surname,
+      status: record.status,
+      note: record.note ?? null,
+      reviewedAt: null,
+    })),
+  );
+  const clanLocations = await createManyChunked(
+    prisma.clanLocation,
+    locations.records.flatMap((record) => record.locations.map((location) => ({
+      id: location.id,
+      clanId: record.clanId,
+      bonGwan: record.bonGwan,
+      surname: record.surname,
+      kind: location.kind,
+      name: location.name,
+      modernArea: location.modernArea,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      status: location.status,
+      confidence: location.status === "verified" ? "verified" : "reported",
+      sourceTitle: location.evidence[0]?.title ?? "공식 출처 검증 대기",
+      sourceUrl: location.evidence[0]?.url ?? null,
+      note: location.note ?? null,
+    }))),
+  );
+  const evidence = await createManyChunked(
+    prisma.clanLocationEvidence,
+    locations.records.flatMap((record) => record.locations.flatMap((location) => location.evidence.map((item) => ({
+      id: item.id,
+      clanId: record.clanId,
+      locationId: location.id,
+      provider: item.provider,
+      title: item.title,
+      url: item.url,
+      licenseCode: item.licenseCode,
+      licenseUrl: item.licenseUrl,
+      retrievedAt: new Date(item.retrievedAt),
+      evidenceSummary: item.evidenceSummary,
+      contentHash: item.contentHash,
+    })))),
+  );
 
-  console.log(`seeded ${persons} persons, ${exams} exams, ${relations} relations`);
+  console.log(`seeded ${persons} persons, ${exams} exams, ${relations} relations, ${researches} research records, ${clanLocations} clan locations, ${evidence} evidence records`);
 }
 
 main()

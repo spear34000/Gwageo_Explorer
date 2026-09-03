@@ -1,0 +1,15 @@
+[
+  {"id":"pungcheon-im-yangju","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"경기도 양주시 회암동 일원","latitude":37.8505,"longitude":127.1057,"confidence":"reported","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-pocheon","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"경기도 포천시 창수면 운산리","latitude":38.0245,"longitude":127.1808,"confidence":"reported","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-icheon","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"경기도 이천시 백사면 송말리","latitude":37.3223,"longitude":127.49,"confidence":"reported","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-dongducheon","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"경기도 동두천시","latitude":37.9034,"longitude":127.0605,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-namyangju","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"경기도 남양주시","latitude":37.636,"longitude":127.2165,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-yeoncheon","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"경기도 연천군","latitude":38.0966,"longitude":127.0748,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-cheorwon","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"강원특별자치도 철원군 갈말읍·동송읍","latitude":38.207,"longitude":127.22,"confidence":"reported","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-pyeonggang","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"강원도 평강군","latitude":38.4,"longitude":127.3,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-okcheon","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"충청북도 옥천군 동이면 세산리","latitude":36.281,"longitude":127.619,"confidence":"reported","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-boryeong","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"충청남도 보령시 미산면 봉성리","latitude":36.2,"longitude":126.68,"confidence":"reported","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-asan","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"충청남도 아산시","latitude":36.7898,"longitude":127.0018,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-buyeo","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"충청남도 부여군","latitude":36.2757,"longitude":126.9098,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null},
+  {"id":"pungcheon-im-geumsan","clanId":"풍천-임","bonGwan":"풍천","surname":"임","kind":"settlement","name":"충청남도 금산군","latitude":36.1089,"longitude":127.4881,"confidence":"regional","sourceTitle":"풍천 임씨 집성촌 자료","sourceUrl":null}
+]

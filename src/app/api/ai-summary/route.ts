@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 const BASE_URL =
   process.env.NVIDIA_BASE_URL ?? "https://integrate.api.nvidia.com/v1";
-const MODEL = process.env.NVIDIA_MODEL ?? "nvidia/nemotron-3-nano-30b-a3b";
+const MODEL = process.env.NVIDIA_MODEL ?? "nvidia/nemotron-3.5-lightning-30b-a3b";
 const TIMEOUT_MS = 30_000;
 
 const TONE_INSTRUCTIONS: Record<string, string> = {
@@ -91,7 +91,7 @@ export async function GET(request: Request) {
       messages: [{ role: "user", content: buildPrompt(detail, tone) }],
       temperature: 0.9,
       top_p: 0.95,
-      max_tokens: 1024,
+      max_tokens: 300,
       stream: true,
       chat_template_kwargs: { thinking: false },
     }),

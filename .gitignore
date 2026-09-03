@@ -43,17 +43,28 @@ next-env.d.ts
 # prisma
 /prisma/dev.db*
 /generated/
+*.xlsx
+*.xls
 
 # local logs
 build.log
 build.err
+dev.log
 dev3100.log
 dev3100.err
 
+# local research exports (the audited JSON datasets remain tracked)
+.tmp-*.json
+
 # deploy artifacts
 /deploy/
+
+# Android local/build outputs
+/android/local.properties
+/artifacts/*.apk
 
 # opencode / codegraph
 /.omo/
 /.codegraph/
 /.playwright-mcp/
+/.tooling/

@@ -19,6 +19,11 @@ export default function Footer() {
           데이터 출처: 한국학중앙연구원 한국역대인물종합정보시스템(과거·취재
           데이터) {repo.isDemoData && "· 현재는 개발용 샘플 데이터"}
         </p>
+        <p className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
+          <a href="/about/data" className="text-accent underline underline-offset-2">데이터 이용 조건</a>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" className="text-accent underline underline-offset-2">지도 저작권</a>
+          <a href="https://encykorea.aks.ac.kr/Guide/ContentUse" target="_blank" rel="noreferrer" className="text-accent underline underline-offset-2">AKS 콘텐츠 이용 안내</a>
+        </p>
       </div>
     </footer>
   );

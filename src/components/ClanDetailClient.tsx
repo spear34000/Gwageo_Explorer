@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, type AnimationParams, type FunctionValue } from "animejs";
 import { formatNumber } from "@/lib/format";
-import { getMapYearRange, summarizeResidencesThroughYear, type MapRecord } from "@/lib/historical-places/residence-timeline";
-import type { ClanDetail, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
+import { countResidenceRecordsThroughYear, getMapYearRange, summarizeResidencesThroughYear, type MapRecord } from "@/lib/historical-places/residence-timeline";
+import type { ClanDetail, ClanLocation, ExamRecordRow, KingCount, ExamTypeStat, ExamType } from "@/lib/data/types";
 import ClanSummary from "@/components/ClanSummary";
 import AIClanSummary from "@/components/AIClanSummary";
 import KoreaMap from "@/components/KoreaMap";
@@ -20,6 +20,7 @@ interface Props {
   detail: ClanDetail;
   items: ExamRecordRow[];
   mapRows: MapRecord[];
+  clanLocations: ClanLocation[];
   totalPages: number;
   pageNum: number;
   baseHref: string;
@@ -33,6 +34,7 @@ export default function ClanDetailClient({
   detail,
   items,
   mapRows,
+  clanLocations,
   totalPages,
   pageNum,
   baseHref,
@@ -42,8 +44,13 @@ export default function ClanDetailClient({
   const { min: minYear, max: maxYear } = getMapYearRange(mapRows);
   const [periodEnd, setPeriodEnd] = useState(maxYear);
   const [mapMode, setMapMode] = useState<"all" | "bonGwan" | "residences">("all");
+  const detailRootRef = useRef<HTMLDivElement>(null);
   const mapResidences = useMemo(() => summarizeResidencesThroughYear(mapRows, periodEnd), [mapRows, periodEnd]);
+  const mapRecordCount = useMemo(() => countResidenceRecordsThroughYear(mapRows, periodEnd), [mapRows, periodEnd]);
   useEffect(() => {
+    const detailRoot = detailRootRef.current;
+    if (!detailRoot) return;
+
     const barDelay: FunctionValue<number> = (_target, index = 0) => index * 35;
     const rowDelay: FunctionValue<number> = (_target, index = 0) => index * 28;
     const fadeDelay: FunctionValue<number> = (_target, index = 0) => index * 55;
@@ -68,16 +75,16 @@ export default function ClanDetailClient({
       delay: fadeDelay,
       easing: "outQuad",
     };
-    const barTargets = document.querySelectorAll(".bar-row");
-    const rowTargets = document.querySelectorAll(".data-table tbody tr");
-    const fadeTargets = document.querySelectorAll("[data-animate='fade']");
+    const barTargets = detailRoot.querySelectorAll(".bar-row");
+    const rowTargets = detailRoot.querySelectorAll(".data-table tbody tr");
+    const fadeTargets = detailRoot.querySelectorAll("[data-animate='fade']");
     if (barTargets.length > 0) animate(barTargets, barAnimation);
     if (rowTargets.length > 0) animate(rowTargets, rowAnimation);
     if (fadeTargets.length > 0) animate(fadeTargets, fadeAnimation);
   }, [clanId]);
 
   return (
-    <div className="space-y-8">
+    <div ref={detailRootRef} className="space-y-8">
       <div data-animate="fade">
         <Link href="/clans" className="text-sm">
           ← 본관 목록
@@ -109,11 +116,11 @@ export default function ClanDetailClient({
               </button>
             ))}
             <label className="ml-auto flex items-center gap-2 text-ink-2">
-              {periodEnd}년
+              지도 기준 {periodEnd}년 · 누적 기록 {formatNumber(mapRecordCount)}건
               <input aria-label="지도 연도" type="range" min={minYear} max={maxYear} value={periodEnd} onChange={(event) => setPeriodEnd(Number(event.target.value))} />
             </label>
           </div>
-          <KoreaMap residences={mapResidences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} markerMode={mapMode} />
+          <KoreaMap residences={mapResidences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} markerMode={mapMode} clanLocations={clanLocations} />
         </div>
         <ClanSummary detail={detail} />
       </div>

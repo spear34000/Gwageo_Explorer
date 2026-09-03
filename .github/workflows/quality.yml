@@ -1,0 +1,33 @@
+name: quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run audit:map
+      - run: npm run audit:clans
+      - run: npm run audit:bongwan
+      - run: npm run audit:sources
+      - run: npm run audit:release
+      - run: npm run audit:location-evidence
+      - run: npm run audit:official-provenance
+      - run: npm run audit:prisma-research
+      - run: npm run build
+      - name: Audit production map routes
+        run: |
+          npm run start -- -p 3100 > /tmp/spear-ex-prod.log 2>&1 &
+          sleep 3
+          AUDIT_BASE_URL=http://localhost:3100 npm run audit:routes

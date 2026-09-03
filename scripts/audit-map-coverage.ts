@@ -12,9 +12,12 @@ interface AuditEntry {
   status: "resolved" | "ambiguous" | "unknown";
 }
 
-const data = JSON.parse(
-  fs.readFileSync(new URL("../prisma/real-data.json", import.meta.url), "utf8"),
-) as RealData;
+const realDataUrl = new URL("../prisma/real-data.json", import.meta.url);
+if (!fs.existsSync(realDataUrl)) {
+  console.log(JSON.stringify({ status: "skipped", reason: "prisma/real-data.json is an external, rights-gated dataset" }, null, 2));
+  process.exit(0);
+}
+const data = JSON.parse(fs.readFileSync(realDataUrl, "utf8")) as RealData;
 
 function frequencies(values: readonly string[]): Map<string, number> {
   const result = new Map<string, number>();

@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { toPng } from "html-to-image";
+import { Capacitor } from "@capacitor/core";
+import { Directory, Filesystem } from "@capacitor/filesystem";
 import { useAIStream } from "@/hooks/useAIStream";
 
 const TONES = ["memes", "friend", "docu", "hype"] as const;
@@ -49,7 +51,7 @@ export default function AIClanSummary({
 }: AIClanSummaryProps) {
   const posterRef = useRef<HTMLDivElement>(null);
   const [tone, setTone] = useState<string>(() => pickTone());
-  const { displayedText, thinking, punchline, summary, failed } = useAIStream(
+  const { displayedText, thinking, punchline, summary, failed, refresh } = useAIStream(
     clanId,
     tone,
     onStreamStart,
@@ -59,6 +61,7 @@ export default function AIClanSummary({
   const rating = ratingFromRank(rank);
 
   const regenerate = () => {
+    refresh();
     setTone(pickTone(tone));
   };
 
@@ -67,15 +70,32 @@ export default function AIClanSummary({
     setSharing(true);
     setShareFeedback(null);
     try {
-      const dataUrl = await toPng(posterRef.current, {
-        pixelRatio: 2,
-        cacheBust: true,
-        backgroundColor: DARK,
-      });
-      const link = document.createElement("a");
-      link.href = dataUrl;
-      link.download = `${clanName}-ai-review.png`;
-      link.click();
+      const dataUrl = await Promise.race([
+        toPng(posterRef.current, {
+          pixelRatio: 2,
+          cacheBust: true,
+          skipFonts: true,
+          backgroundColor: DARK,
+        }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("image generation timed out")), 20_000),
+        ),
+      ]);
+      const filename = `${clanName.replace(/[\\/:*?"<>|]/g, "-")}-ai-review.png`;
+      if (Capacitor.isNativePlatform()) {
+        const base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
+        await Filesystem.writeFile({
+          path: filename,
+          data: base64,
+          directory: Directory.Documents,
+          recursive: true,
+        });
+      } else {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = filename;
+        link.click();
+      }
       setShareFeedback("저장 완료!");
       setTimeout(() => setShareFeedback(null), 2500);
     } catch (e) {
@@ -90,11 +110,11 @@ export default function AIClanSummary({
 
   return (
     <section aria-label="AI 본관 리뷰">
-      <div className="flex justify-center overflow-x-auto">
+      <div className="flex w-full justify-center">
         <div
           ref={posterRef}
-          style={{ background: DARK, width: "512px", height: "512px" }}
-          className="flex shrink-0 flex-col p-3"
+          style={{ background: DARK }}
+          className="flex aspect-square w-full max-w-[512px] flex-col p-3"
         >
           <div
             style={{ border: `2px solid ${GOLD}` }}

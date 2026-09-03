@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">&#xACFC;&#xAC70;&#xD0D0;&#xC0C9;&#xAE30;</string>
+    <string name="title_activity_main">&#xACFC;&#xAC70;&#xD0D0;&#xC0C9;&#xAE30;</string>
+    <string name="package_name">com.spear.gwageo</string>
+    <string name="custom_url_scheme">com.spear.gwageo</string>
+</resources>

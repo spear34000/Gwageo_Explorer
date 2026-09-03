@@ -1,143 +1,104 @@
-# 아키텍처 (Architecture)
+# 과거탐색기 아키텍처
 
-## 개요
+## 1. 시스템 개요
 
-과거탐색기는 **Next.js 16.3 App Router** 기반의 서버 컴포넌트 중심 아키텍처를 채택합니다. 모든 데이터 접근은 `DataRepository` 인터페이스로 추상화되어, UI는 SQLite(`PrismaDataRepository`)와 메모리 목(`MockDataRepository`)을 구분하지 않고 동일한 비동기 API로 동작합니다.
+과거탐색기는 조선시대 과거 합격 기록을 본관·인물·시험·왕대·거주지 기준으로 탐색하는 웹과 Android 앱이다.
 
-```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────┐
-│  Server         │────▶│  DataRepository  │────▶│  Prisma     │
-│  Components     │     │  (interface)     │     │  + SQLite   │
-│  / Route        │     │                  │     │  dev.db     │
-│  Handlers       │     └──────────────────┘     └─────────────┘
-└─────────────────┘              │                      │
-                                 └──── Mock ────────────┘
-                                       (DATA_SOURCE=mock)
-```
+```text
+AKS XLSX / 허용된 공식 자료
+        │
+        ▼
+수집·정규화 스크립트 (scripts/)
+        │  재현 가능한 JSON + manifest
+        ▼
+Prisma seed ───────────────► SQLite (로컬/서버)
+        │
+        ▼
+DataRepository (Prisma 또는 mock)
+        │
+        ├── Next.js Server Components / Route Handlers
+        │       ├── 검색·목록·상세·비교·랭킹 라우트
+        │       └── /api/ai-summary (SSE 프록시)
+        │
+        └── React Client Components
+                ├── KoreaMap (Web Mercator)
+                ├── AIClanSummary (스트리밍·캐시)
+                └── anime.js 인터랙션
 
-## 디렉터리 구조
-
-```
-src/
-  app/                    # App Router 라우트 (서버 컴포넌트)
-    layout.tsx            # RootLayout + Theme script + DemoBanner
-    page.tsx              # 홈: 검색 + TOP 10
-    globals.css           # Tailwind 4 + 디자인 토큰
-    clans/                # 본관 목록/상세
-    people/[id]/          # 인물 상세
-    rankings/             # TOP 100
-    periods/              # 왕대별
-    compare/              # 본관 비교
-    api/search/           # 한글 검색 API
-    api/ai-summary/       # AI 요약 API
-  components/             # 재사용 컴포넌트 (Client/Server 혼합)
-    KoreaMap.tsx          # 한반도 위성 지도 (Wikimedia NASA)
-    PeriodTimeline.tsx    # 시대별 라인/영역 차트 (anime.js)
-    ClanDetailClient.tsx  # 본관 상세 클라이언트 래퍼
-    AIClanSummary.tsx     # AI 요약 카드
-    SearchBar.tsx         # 검색 입력
-    ...
-  lib/
-    data/
-      repository.ts       # DataRepository 구현 (Prisma/Mock)
-      types.ts            # 도메인 타입 (ClanSummary, PersonDetail 등)
-      kings.ts            # 27대 왕 목록 + 재위 기간
-      db.ts               # PrismaClient 싱글톤
-      mock-data.ts        # 목업 시드
-      clan-roster.ts      # 목업 클랜 로스터
-    search.ts             # 한글 검색 정규화 + 초성/한자/오타
-    format.ts             # 숫자 포맷
-  hooks/
-    useAIStream.ts        # AI 스트리밍 훅
-
-prisma/
-  schema.prisma           # Person, Exam, PersonRelation
-  seed.ts                 # real-data.json → SQLite
-  real-data.json          # 22MB, 84k 합격 / 69k 인물 (커밋 대상)
-
-generated/prisma/         # Prisma Client (@db/* alias, gitignore)
-scripts/
-  ingest-real-data.mjs    # AKS XLSX → real-data.json
+Capacitor Android ── HTTPS 원격 WebView ──► https://spear.pics
 ```
 
-## 데이터 흐름
+## 2. 기술 스택 상세
 
-### 1. 빌드 타임
-
-```
-XLSX (aks-data/*.xlsx, 7개, gitignore) 
-  → scripts/ingest-real-data.mjs 
-  → prisma/real-data.json (커밋) 
-  → prisma/seed.ts 
-  → prisma/dev.db (SQLite, gitignore)
-```
-
-- `ingest-real-data.mjs`는 `문과/무과/생원/진사` 4종 + `친속` 3종을 정규화합니다.
-- `clanId`는 `${bonGwan}-${surname}` 형태의 한글 슬러그입니다 (예: `전주-이`).
-- 등급은 원자료에 없어 `연도별 순번`으로 파생합니다 (갑과 1-3 / 을과 4-10 / 병과 11~).
-
-### 2. 런타임
-
-```
-page.tsx (server) 
-  → repository.getClan(id)  // async
-  → PrismaDataRepository.loadRows() // cached rowsPromise
-  → buildClanDetail()       // 집계 (byKing, residences, peakKing)
-  → ClanDetailClient (client) // 시각화 + 인터랙션
-```
-
-- `PrismaDataRepository`는 `rowsPromise`/`summariesPromise`로 84k 행 집계를 캐시합니다. 재계산 금지.
-- `MockDataRepository`는 `DATA_SOURCE=mock`일 때 동일 인터페이스로 동작합니다 (개발/테스트용).
-
-### 3. AI 요약
-
-```
-ClanDetailClient
-  → AIClanSummary (client)
-  → POST /api/ai-summary { clanName, rank, stats, king, residence }
-  → NVIDIA NIM (OpenAI 호환, nemotron-3-nano-30b-a3b)
-  → stream (SSE)
-```
-
-- 4가지 톤(병맛/수다/다큐병/중계) 중 랜덤, `새 요약`으로 재요청 가능.
-- `max_tokens: 1024`, `timeout: 30s`, `thinking: false`로 최적화 (이전 45s → 1.8s).
-
-## 렌더링 전략
-
-| 라우트 | 렌더링 | 이유 |
+| 계층 | 기술 | 적용 방식과 책임 |
 |---|---|---|
-| `/` | Static + ISR | TOP 10은 빌드 시 쿼리 |
-| `/clans/[id]` | Dynamic (SSR) | `decodeURIComponent(id)` 필요, `searchParams` Promise |
-| `/people/[id]` | Dynamic | 관계 그래프 |
-| `/rankings` | Static | TOP 100 |
-| `/api/*` | Dynamic | 검색/AI |
+| 런타임 | Node.js 20+, JDK 17(Android) | 서버 실행, 데이터 스크립트, APK 컴파일 |
+| 웹 프레임워크 | Next.js 16.3 App Router, Turbopack | `src/app` 라우팅, SSR, 정적·동적 렌더링, Route Handler |
+| UI 런타임 | React 19.2 | Server Component에서 데이터 조회, Client Component에서 필터·상호작용 관리 |
+| 언어 | TypeScript 5, `strict: true` | 도메인 타입 계약과 repository 경계 보장. `any`와 `@ts-ignore` 금지 |
+| 스타일 | Tailwind CSS 4 + `globals.css` | 토큰, 반응형 레이아웃, 지도·테이블 공통 클래스 |
+| 모션 | anime.js 4 | 페이지 진입, 카드·필터 전환 등 제한적인 UI 모션. 데이터 렌더링과 분리 |
+| ORM/DB | Prisma 7.9 + `@prisma/adapter-better-sqlite3` + SQLite | `prisma/schema.prisma`를 단일 스키마로 사용. 서버 배포 DB는 별도 파일 |
+| 생성 코드 | Prisma Client (`generated/prisma`) | `@db/*` alias를 통해 타입 안전한 쿼리 수행 |
+| 지도 | OpenStreetMap 호환 타일 + 자체 Web Mercator 투영 | 타일 URL은 `NEXT_PUBLIC_MAP_TILE_URL`; 화면에 타일·데이터 attribution을 분리 표시 |
+| AI | NVIDIA NIM OpenAI 호환 API | 서버에서만 `NVIDIA_API_KEY` 사용, SSE로 중계, 모델은 `nvidia/nemotron-3.5-lightning-30b-a3b` |
+| 이미지 저장 | `html-to-image` + Capacitor Filesystem 6 | 브라우저는 download 링크, Android는 Documents 디렉터리에 저장 |
+| 모바일 셸 | Capacitor 6 Android | `com.spear.gwageo`, `server.url=https://spear.pics`; 웹 번들은 서버에서 갱신 |
+| 품질 도구 | ESLint 9, `tsc`, Gradle | 타입·문법·웹 빌드·APK release 빌드 검증 |
+| 배포 | GitHub + GitHub Releases, Caddy/서비스 | 소스는 MIT, 데이터는 원 라이선스 유지. APK는 별도 release asset |
 
-- **Next 16.3 특이사항:** `params`/`searchParams`는 Promise이며, URL 디코딩을 하지 않습니다. `clans/[id]`에서 한글 슬러그(`전주-이`)는 `decodeURIComponent` 후 조회해야 합니다.
-- **Turbopack 이슈:** `.omo/codegraph` 경로 버그로 `next build` 시 Turbopack이 패닉 → `next build --webpack` 필수.
+## 3. 디렉터리와 의존성 방향
 
-## 상태 관리
+```text
+src/app/                 라우트와 서버 조합 (lib를 호출)
+src/components/          브라우저 UI (repository 직접 호출 금지)
+src/hooks/               클라이언트 상태·SSE·캐시
+src/lib/data/             타입, repository, Prisma/mock 구현
+src/lib/historical-places 지명 정규화·좌표·시대별 거주지
+prisma/                  스키마, seed, 정규화 데이터, manifest
+scripts/                 ingest, 조사 보강, 라이선스·좌표 감사
+android/                 Capacitor 생성 Android 프로젝트
+docs/                    아키텍처·배포·데이터 라이선스
+```
 
-- **서버 상태:** `DataRepository` (캐시된 Promise)
-- **클라이언트 상태:** `useState`/`useEffect` + `useSyncExternalStore` (ThemeToggle)
-- **URL 상태:** `searchParams` (exam 필터, page, q)
+의존성은 `app → components/hooks → lib/data` 방향을 따른다. UI는 `getRepository()`를 통해서만 데이터를 읽고 Prisma Client를 직접 import하지 않는다. mock과 Prisma 구현은 동일한 `DataRepository` 계약을 구현한다.
 
-전역 상태 라이브러리(Redux/Zustand) 없음 — 서버 컴포넌트와 URL로 충분합니다.
+## 4. 데이터 계층
 
-## 테마
+핵심 모델은 `Person`, `Exam`, `PersonRelation`, `ClanResearch`, `ClanLocation`, `ClanLocationEvidence`다. 본관 발생지, 행정구역 변천, 주요 세거지는 위치 유형으로 구분한다. 조사 상태는 `verified`, `ambiguous`, `no_official_source`, `outside_korea`, `review_required`, `license_blocked`로 분류한다.
 
-- `globals.css`에 CSS 변수 (`--bg`, `--fg`, `--accent` 등) 정의
-- `:root` (라이트) + `.dark` 오버라이드로 다크모드
-- `ThemeToggle.tsx`는 `useSyncExternalStore`로 `localStorage` + `prefers-color-scheme` 동기화
-- `layout.tsx`에 FOUC 방지 인라인 스크립트 + `suppressHydrationWarning`
+수집 흐름은 `ingest-real-data.mjs → real-data.json → seed.ts → SQLite`다. 본관 조사 결과는 `generate-clan-research.mjs`와 `backfill-clan-locations.ts`로 재생성할 수 있으며, `dataset-manifest.json`에 해시·출처·수집일을 기록한다. 84,525건 집계와 본관 요약은 `rowsPromise`·`summariesPromise`로 캐시하여 요청마다 재계산하지 않는다.
 
-## 보안
+## 5. 요청 흐름과 캐싱
 
-- `DATABASE_URL` 없음 — SQLite 파일 직접 참조 (`file:./prisma/dev.db`)
-- `NVIDIA_API_KEY`는 `.env` (gitignore), 클라이언트에 노출되지 않음 (Route Handler에서만 사용)
-- `allowedDevOrigins: ["127.0.0.1"]` — HMR 크로스 오리진 허용
+동적 라우트의 `params`와 `searchParams`는 Promise이므로 서버에서 `await`한다. 한글 slug는 `decodeURIComponent` 후 repository에 전달한다. 검색·목록은 서버 렌더링하고, 필터·지도·AI 스트림은 클라이언트 상태로 처리한다. AI 결과는 clan·tone별 `sessionStorage`에 캐시하며 사용자가 재생성할 때만 새 요청을 보낸다.
 
-## 확장 포인트
+## 6. 지도 렌더링
 
-- **파(분파) 확장:** `Person`에 `branchId` 추가, `ClanBranch` 테이블 신설, `gok.kr`/`위키백과` 크롤러로 `branch` 데이터 적재
-- **유명 인물 재도입:** `ClanNotable` 모델 + `P53` SPARQL + `scripts/seed-notables.ts` (이전 구현 참조, CC0)
-- **지도 고도화:** `KoreaMap`의 `PLACE_COORDS`를 KOSIS 좌표로 교체, Leaflet 도입 검토
+`getClanLocations(clanId)`가 좌표와 조사 근거를 반환한다. 발생지(보라색), 검증된 거주지(파란색), 검토 중·미확인(주황색), 비활성/근거 없음(회색)을 구분한다. 남북을 포함한 한반도 bounds를 고정하고 실제 위·경도를 Web Mercator로 투영한다. SSR과 클라이언트가 동일한 반올림 좌표·크기 문자열을 사용해 hydration mismatch를 방지한다.
+
+## 7. AI와 보안
+
+브라우저는 `/api/ai-summary`만 호출한다. Route Handler가 API 키를 보관하고 NVIDIA NIM에 요청한 뒤 `text/event-stream`으로 토큰을 중계한다. 서버 출력은 300 tokens, 클라이언트 표시 문자열은 420자에서 제한한다. 키·`.env`·로컬 DB는 Git에 포함하지 않는다.
+
+## 8. Android·배포
+
+Capacitor 앱은 원격 HTTPS WebView이므로 새 웹 기능은 서버 배포 후 앱에서 반영된다. APK 생성:
+
+```powershell
+$env:JAVA_HOME='C:\Program Files\Java\jdk-17'
+npx cap sync android
+android\gradlew.bat -p android assembleRelease --no-daemon --console=plain
+```
+
+`app-release-unsigned.apk`는 release 최적화만 적용된 unsigned 산출물이다. 스토어 배포에는 저장소 밖의 운영 keystore와 서명 설정이 필요하다.
+
+## 9. 검증과 운영 원칙
+
+```text
+npm run typecheck → npm run lint → npm run build
+npm run audit:clans / audit:location-evidence / audit:official-provenance
+./android/gradlew assembleRelease
+```
+
+모든 본관 조합은 조사 상태를 가져야 하며, `verified` 위치는 좌표·공식 URL·허용 라이선스·확인일이 모두 있어야 한다. OSM 타일은 제공자 약관과 attribution을 준수하고, 제3자 데이터는 `THIRD_PARTY_NOTICES.md`와 `docs/DATA-LICENSE.md`에서 원 라이선스를 명시한다.

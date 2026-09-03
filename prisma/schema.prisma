@@ -52,3 +52,57 @@ model PersonRelation {
 
   @@id([personId, relatedPersonId, type])
 }
+
+model ClanLocation {
+  id         String @id
+  clanId     String
+  research   ClanResearch @relation(fields: [clanId], references: [clanId], onDelete: Cascade)
+  bonGwan    String?
+  surname    String?
+  kind       String
+  name       String
+  modernArea String
+  latitude   Float
+  longitude  Float
+  status     String
+  confidence String?
+  sourceTitle String?
+  sourceUrl   String?
+  note       String?
+  evidence   ClanLocationEvidence[]
+
+  @@index([clanId])
+}
+
+model ClanResearch {
+  clanId     String @id
+  bonGwan    String
+  surname    String
+  status     String
+  note       String?
+  reviewedAt DateTime?
+  locations  ClanLocation[]
+  evidence   ClanLocationEvidence[]
+
+  @@index([bonGwan, surname])
+  @@index([status])
+}
+
+model ClanLocationEvidence {
+  id              String @id
+  clanId          String
+  research        ClanResearch @relation(fields: [clanId], references: [clanId], onDelete: Cascade)
+  locationId      String?
+  location        ClanLocation? @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  provider        String
+  title           String
+  url             String
+  licenseCode     String
+  licenseUrl      String
+  retrievedAt     DateTime
+  evidenceSummary String
+  contentHash     String
+
+  @@index([clanId])
+  @@index([locationId])
+}
