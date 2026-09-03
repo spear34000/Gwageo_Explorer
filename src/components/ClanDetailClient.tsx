@@ -123,7 +123,45 @@ export default function ClanDetailClient({
           </div>
           <KoreaMap residences={mapResidences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} markerMode={mapMode} clanLocations={clanLocations} />
         </div>
-        <ClanSummary detail={detail} />
+        <div className="space-y-6">
+          <ClanSummary detail={detail} />
+          <section>
+            <h2 className="mb-3 font-display text-lg">합격 연령</h2>
+            <AgeDistribution stats={detail.ageStats} />
+          </section>
+          <section>
+            <h2 className="mb-3 font-display text-lg">주요 거주지</h2>
+            <div className="table-scroll">
+              <table className="data-table">
+                <caption className="sr-only">주요 거주지 상위 5곳</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">거주지</th>
+                    <th scope="col">비율</th>
+                    <th scope="col" className="num">합격자 수</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const top5 = detail.residences.slice(0, 5);
+                    const maxR = Math.max(...top5.map((r) => r.count), 1);
+                    return top5.map((r: { residence: string; count: number }) => (
+                      <tr key={r.residence}>
+                        <td>{r.residence}</td>
+                        <td className="w-32">
+                          <span className="bar-track block h-2" role="img" aria-label={`${r.residence} ${r.count}명`}>
+                            <span className="bar-fill block h-2" style={{ width: `${(r.count / maxR) * 100}%` }} />
+                          </span>
+                        </td>
+                        <td className="num">{formatNumber(r.count)}</td>
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
       </div>
 
       <section data-animate="fade">
@@ -151,44 +189,6 @@ export default function ClanDetailClient({
           }))}
           max={timelineMax}
         />
-      </section>
-
-      <section data-animate="fade">
-        <h2 className="mb-3 font-display text-lg">합격 연령</h2>
-        <AgeDistribution stats={detail.ageStats} />
-      </section>
-
-      <section data-animate="fade">
-        <h2 className="mb-3 font-display text-lg">주요 거주지</h2>
-        <div className="table-scroll">
-          <table className="data-table">
-            <caption className="sr-only">주요 거주지 상위 5곳</caption>
-            <thead>
-              <tr>
-                <th scope="col">거주지</th>
-                <th scope="col">비율</th>
-                <th scope="col" className="num">합격자 수</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(() => {
-                const top5 = detail.residences.slice(0, 5);
-                const maxR = Math.max(...top5.map((r) => r.count), 1);
-                return top5.map((r: { residence: string; count: number }) => (
-                  <tr key={r.residence}>
-                    <td>{r.residence}</td>
-                    <td className="w-32">
-                      <span className="bar-track block h-2" role="img" aria-label={`${r.residence} ${r.count}명`}>
-                        <span className="bar-fill block h-2" style={{ width: `${(r.count / maxR) * 100}%` }} />
-                      </span>
-                    </td>
-                    <td className="num">{formatNumber(r.count)}</td>
-                  </tr>
-                ));
-              })()}
-            </tbody>
-          </table>
-        </div>
       </section>
 
       <section data-animate="fade">
