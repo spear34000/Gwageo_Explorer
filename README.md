@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/gwageo-logo.png" alt="과거탐색기 로고" width="112" />
+  <img src="public/gwageo-logo.svg" alt="과거탐색기 로고" width="112" />
 </p>
 
 <h1 align="center">과거탐색기 (Gwageo Explorer)</h1>

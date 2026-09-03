@@ -28,7 +28,7 @@ export default function Header() {
           aria-label="과거탐색기 홈"
         >
           <Image
-            src="/gwageo-logo.png"
+            src="/gwageo-logo.svg"
             alt=""
             width={32}
             height={32}
