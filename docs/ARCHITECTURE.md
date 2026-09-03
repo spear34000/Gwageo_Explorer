@@ -114,6 +114,29 @@ android\gradlew.bat -p android assembleRelease --no-daemon --console=plain
 
 `app-release-unsigned.apk`는 release 최적화만 적용된 unsigned 산출물이다. 스토어 배포에는 저장소 밖의 운영 keystore와 서명 설정이 필요하다.
 
+### 공개 도메인과 Cloudflare Tunnel
+
+공개 트래픽은 Cloudflare가 DNS·TLS·엣지 보호를 담당하고, Cloudflare Tunnel(`cloudflared`)이 인바운드 포트를 열지 않은 서버의 로컬 서비스로 연결한다.
+
+```text
+사용자 브라우저 / Android WebView
+          │ HTTPS https://spear.pics
+          ▼
+Cloudflare DNS + Edge TLS/WAF
+          │ encrypted tunnel
+          ▼
+cloudflared (VPS)
+          │ http://127.0.0.1:4300
+          ▼
+spear-web.service (Next.js `next start`)
+```
+
+- DNS의 `spear.pics` 레코드는 Tunnel에 연결하며 VPS의 4300 포트를 인터넷에 직접 노출하지 않는다.
+- `cloudflared`는 systemd 서비스로 실행하고 터널 토큰·인증서는 저장소에 넣지 않는다.
+- Caddy를 함께 사용하는 경우에도 TLS 종료 지점과 원본 포트는 실제 운영 설정 하나로 고정하고, Cloudflare Origin 규칙과 중복 리다이렉트를 만들지 않는다.
+- Android의 `capacitor.config.ts`는 `server.url`을 `https://spear.pics`로 고정하므로 도메인·터널 장애는 앱의 웹 화면과 AI 요청 모두에 영향을 준다.
+- 배포 후 `curl -I https://spear.pics`, 지도 타일 응답, `/api/search`, `/api/ai-summary` SSE 200, Cloudflare Tunnel·Next.js systemd 상태를 함께 확인한다.
+
 ### 배포 경계
 
 | 대상 | 포함 | 제외/보호 |
