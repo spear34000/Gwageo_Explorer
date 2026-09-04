@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className="h-full" suppressHydrationWarning>
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+      <body className="flex min-h-full min-w-0 flex-col overflow-x-hidden bg-background text-foreground">
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d)){document.documentElement.classList.add('dark');}}catch(e){}})();`,
@@ -21,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
         <DemoBanner />
         <Header />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
+        <main className="mx-auto min-w-0 w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
           {children}
         </main>
         <Footer />
