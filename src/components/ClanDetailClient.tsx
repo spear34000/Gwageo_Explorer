@@ -109,7 +109,7 @@ export default function ClanDetailClient({
       </div>
 
       <div data-animate="fade" className="grid items-start gap-6 lg:grid-cols-[300px_1fr]">
-        <div>
+        <div className="lg:sticky lg:top-4 lg:self-start">
           <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
             {(["all", "bonGwan", "residences"] as const).map((mode) => (
               <button key={mode} type="button" className="btn-secondary px-2 py-1" aria-pressed={mapMode === mode} onClick={() => setMapMode(mode)}>
