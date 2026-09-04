@@ -153,6 +153,24 @@
 }
 
 @layer components {
+  /* 본관 상세의 지도는 넓은 화면에서 본문 왼쪽 gutter까지 확장한다. */
+  .clan-overview-grid {
+    display: grid;
+    min-width: 0;
+    align-items: start;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .clan-overview-grid {
+      position: relative;
+      left: 50%;
+      width: min(80rem, calc(100vw - 2rem));
+      transform: translateX(-50%);
+      grid-template-columns: 300px minmax(0, 1fr);
+    }
+  }
+
   /* 숫자 나열 정보 영역 (본관 상세 요약 등) */
   .stat-grid {
     display: grid;
