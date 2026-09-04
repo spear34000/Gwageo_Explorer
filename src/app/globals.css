@@ -167,7 +167,7 @@
     }
 
     .clan-map-column {
-      transform: translateX(calc((100vw - 64rem) / -2 + 0.5rem));
+      transform: translateX(calc((100vw - 64rem) / -2 - 1rem));
     }
   }
 
