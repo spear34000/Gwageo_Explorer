@@ -163,8 +163,10 @@
 
   @media (min-width: 1024px) {
     .clan-overview-grid {
+      --clan-sidebar-shift: min(calc((100vw - 64rem) / 2 + 1rem), 12rem);
       position: relative;
-      left: max(calc((100vw - 64rem) / -2 - 1rem), -12rem);
+      left: calc(0px - var(--clan-sidebar-shift));
+      width: calc(100% + var(--clan-sidebar-shift));
       grid-template-columns: 300px minmax(0, 1fr);
     }
   }
