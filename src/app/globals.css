@@ -165,7 +165,7 @@
     .clan-overview-grid {
       position: relative;
       left: 50%;
-      width: min(80rem, calc(100vw - 2rem));
+      width: calc(100vw - 1rem);
       transform: translateX(-50%);
       grid-template-columns: 300px minmax(0, 1fr);
     }
