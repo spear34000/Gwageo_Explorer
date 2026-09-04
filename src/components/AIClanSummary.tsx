@@ -182,13 +182,13 @@ export default function AIClanSummary({
         </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-3 flex justify-center">
         <button
           type="button"
           onClick={saveAsImage}
           disabled={sharing}
           style={{ background: sharing ? MUTED : GOLD, color: DARK, fontWeight: 700 }}
-          className="flex-1 px-5 py-3 text-sm"
+          className="px-5 py-2.5 text-sm"
         >
           {sharing ? "저장 중..." : "사진으로 저장하기"}
         </button>

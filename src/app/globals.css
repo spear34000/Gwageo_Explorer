@@ -153,21 +153,38 @@
 }
 
 @layer components {
-  /* 본관 상세의 지도는 넓은 화면에서 본문 왼쪽 gutter까지 확장한다. */
-  .clan-overview-grid {
+  /* 모바일은 제목과 AI 요약 뒤에 지도를 배치한다. */
+  .clan-detail-layout {
     display: grid;
     min-width: 0;
     align-items: start;
-    gap: 1.5rem;
+    gap: 2rem;
+    grid-template-areas:
+      "title"
+      "ai"
+      "map"
+      "content";
   }
 
+  .clan-title-block { grid-area: title; }
+  .clan-ai-block { grid-area: ai; }
+  .clan-map-column { grid-area: map; }
+  .clan-content { grid-area: content; }
+
+  /* 데스크톱 지도는 제목 높이에서 시작해 상세 본문 끝까지 고정된다. */
   @media (min-width: 1024px) {
-    .clan-overview-grid {
+    .clan-detail-layout {
       --clan-sidebar-shift: min(calc((100vw - 64rem) / 2 + 1rem), 12rem);
       position: relative;
       left: calc(0px - var(--clan-sidebar-shift));
       width: calc(100% + var(--clan-sidebar-shift));
       grid-template-columns: 300px minmax(0, 1fr);
+      grid-template-areas:
+        "map title"
+        "map ai"
+        "map content";
+      column-gap: 1.5rem;
+      row-gap: 2rem;
     }
   }
 

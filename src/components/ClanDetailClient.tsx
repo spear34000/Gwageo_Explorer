@@ -85,15 +85,15 @@ export default function ClanDetailClient({
   }, [clanId]);
 
   return (
-    <div ref={detailRootRef} className="space-y-8">
-      <div data-animate="fade">
+    <div ref={detailRootRef} className="clan-detail-layout">
+      <div data-animate="fade" className="clan-title-block">
         <Link href="/clans" className="text-sm">
           ← 본관 목록
         </Link>
         <h1 className="mt-1 font-display text-2xl font-bold">{detail.name}</h1>
       </div>
 
-      <div data-animate="fade">
+      <div data-animate="fade" className="clan-ai-block">
         <AIClanSummary
           clanId={clanId}
           clanName={detail.name}
@@ -108,8 +108,7 @@ export default function ClanDetailClient({
         />
       </div>
 
-      <div className="clan-overview-grid">
-        <div className="clan-map-column order-first min-w-0 justify-self-start lg:sticky lg:top-4 lg:w-[300px] lg:self-start">
+      <div className="clan-map-column min-w-0 justify-self-start lg:sticky lg:top-4 lg:w-[300px] lg:self-start">
           <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
             {(["all", "bonGwan", "residences"] as const).map((mode) => (
               <button key={mode} type="button" className="btn-secondary px-2 py-1" aria-pressed={mapMode === mode} onClick={() => setMapMode(mode)}>
@@ -122,8 +121,9 @@ export default function ClanDetailClient({
             </label>
           </div>
           <KoreaMap residences={mapResidences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} markerMode={mapMode} clanLocations={clanLocations} />
-        </div>
-        <div className="min-w-0 space-y-6">
+      </div>
+
+      <div className="clan-content min-w-0 space-y-6">
           <ClanSummary detail={detail} />
           <section>
             <h2 className="mb-3 font-display text-lg">합격 연령</h2>
@@ -187,9 +187,7 @@ export default function ClanDetailClient({
               <Pagination page={pageNum} totalPages={totalPages} baseHref={baseHref} />
             </div>
           </section>
-        </div>
       </div>
-
     </div>
   );
 }
