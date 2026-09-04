@@ -122,6 +122,18 @@ export default function ClanDetailClient({
             </label>
           </div>
           <KoreaMap residences={mapResidences} bonGwan={detail.bonGwan} mainResidence={detail.mainResidence} markerMode={mapMode} clanLocations={clanLocations} />
+          <section className="mt-6">
+            <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
+            <div className="mb-3 flex gap-px">
+              {detail.byKing.map((k) => {
+                const intensity = timelineMax > 0 ? k.count / timelineMax : 0;
+                return (
+                  <div key={k.kingId} className="h-2 flex-1 rounded-sm" style={{ backgroundColor: `rgba(14,77,122,${intensity > 0 ? 0.18 + intensity * 0.82 : 0.06})` }} title={`${k.kingName} ${formatNumber(k.count)}명`} aria-label={`${k.kingName} ${k.count}명`} />
+                );
+              })}
+            </div>
+            <PeriodTimeline data={detail.byKing.map((k: KingCount) => ({ label: k.kingName, value: k.count }))} max={timelineMax} />
+          </section>
         </div>
         <div className="space-y-6">
           <ClanSummary detail={detail} />
@@ -163,33 +175,6 @@ export default function ClanDetailClient({
           </section>
         </div>
       </div>
-
-      <section data-animate="fade">
-        <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
-        <div className="mb-3 flex gap-px">
-          {detail.byKing.map((k) => {
-            const intensity = timelineMax > 0 ? k.count / timelineMax : 0;
-            return (
-              <div
-                key={k.kingId}
-                className="h-2 flex-1 rounded-sm"
-                style={{
-                  backgroundColor: `rgba(14,77,122,${intensity > 0 ? 0.18 + intensity * 0.82 : 0.06})`,
-                }}
-                title={`${k.kingName} ${formatNumber(k.count)}명`}
-                aria-label={`${k.kingName} ${k.count}명`}
-              />
-            );
-          })}
-        </div>
-        <PeriodTimeline
-          data={detail.byKing.map((k: KingCount) => ({
-            label: k.kingName,
-            value: k.count,
-          }))}
-          max={timelineMax}
-        />
-      </section>
 
       <section data-animate="fade">
         <h2 className="mb-3 font-display text-lg">시험 종류</h2>
