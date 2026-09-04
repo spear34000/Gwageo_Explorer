@@ -7,9 +7,10 @@ import { formatNumber } from "@/lib/format";
 interface PeriodTimelineProps {
   data: { label: string; value: number }[];
   max?: number;
+  peakLabel?: string;
 }
 
-export default function PeriodTimeline({ data, max }: PeriodTimelineProps) {
+export default function PeriodTimeline({ data, max, peakLabel = "전성기" }: PeriodTimelineProps) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const chartMax = max ?? Math.max(0, ...data.map((d) => d.value));
   const scale = chartMax > 0 ? chartMax : 1;
@@ -67,7 +68,7 @@ export default function PeriodTimeline({ data, max }: PeriodTimelineProps) {
       </div>
       {peak && (
         <p className="text-xs text-ink-2">
-          전성기 <span className="font-medium text-foreground">{peak.label} {formatNumber(peak.value)}명</span>
+          {peakLabel} <span className="font-medium text-foreground">{peak.label} {formatNumber(peak.value)}명</span>
         </p>
       )}
     </div>

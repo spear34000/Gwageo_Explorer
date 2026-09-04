@@ -37,4 +37,39 @@ describe("Clan detail page", () => {
     assert.equal(page.props.items.length, Math.min(candidate.filteredTotal, 20));
     assert.equal(page.props.mapRows.length, candidate.clanTotal);
   });
+
+  it("filters full clan records by a person or residence query", async () => {
+    const clans = await repository.listClans();
+    const clan = clans.find((candidate) => candidate.total > 20);
+    assert.ok(clan, "expected a clan with records");
+    const all = await repository.listExamRecords({ clanId: clan.id }, 1, clan.total);
+    const target = all.items[0];
+    assert.ok(target, "expected a record");
+
+    const queryFilters = { clanId: clan.id, query: target.personName } as {
+      clanId: string;
+      query: string;
+    };
+    const result = await repository.listExamRecords(
+      queryFilters,
+      1,
+      20,
+    );
+
+    assert.ok(result.total >= 1);
+    assert.ok(result.total < all.total);
+    assert.ok(result.items.some((row) => row.personName === target.personName));
+  });
+
+  it("exposes ten-year admission age bands", async () => {
+    const clan = (await repository.listClans()).find((candidate) => candidate.total > 0);
+    assert.ok(clan, "expected a clan with records");
+    const detail = await repository.getClan(clan.id);
+    assert.ok(detail);
+
+    assert.deepEqual(
+      detail.ageStats.map((band) => band.label),
+      ["10세 미만", "10대", "20대", "30대", "40대", "50대", "60대", "70대", "80대 이상"],
+    );
+  });
 });

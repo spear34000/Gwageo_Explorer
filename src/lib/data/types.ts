@@ -270,7 +270,7 @@ export interface DataRepository {
    * page는 1부터 시작
    */
   listExamRecords(
-    filters: { clanId?: string; examType?: ExamType; kingId?: string },
+    filters: { clanId?: string; examType?: ExamType; kingId?: string; query?: string },
     page: number,
     pageSize: number,
   ): Promise<{ items: ExamRecordRow[]; total: number }>;

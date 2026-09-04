@@ -131,11 +131,15 @@ function buildClanDetail(clan: ClanSummary, rows: ExamRecordRow[]): ClanDetail {
   const kingCounts = new Map<string, number>();
   const residenceCounts = new Map<string, number>();
   const ageBands: AgeBandStat[] = [
-    { label: "20세 미만", min: 0, max: 19, count: 0, ratio: 0 },
-    { label: "20–29세", min: 20, max: 29, count: 0, ratio: 0 },
-    { label: "30–39세", min: 30, max: 39, count: 0, ratio: 0 },
-    { label: "40–49세", min: 40, max: 49, count: 0, ratio: 0 },
-    { label: "50세 이상", min: 50, max: null, count: 0, ratio: 0 },
+    { label: "10세 미만", min: 0, max: 9, count: 0, ratio: 0 },
+    { label: "10대", min: 10, max: 19, count: 0, ratio: 0 },
+    { label: "20대", min: 20, max: 29, count: 0, ratio: 0 },
+    { label: "30대", min: 30, max: 39, count: 0, ratio: 0 },
+    { label: "40대", min: 40, max: 49, count: 0, ratio: 0 },
+    { label: "50대", min: 50, max: 59, count: 0, ratio: 0 },
+    { label: "60대", min: 60, max: 69, count: 0, ratio: 0 },
+    { label: "70대", min: 70, max: 79, count: 0, ratio: 0 },
+    { label: "80대 이상", min: 80, max: null, count: 0, ratio: 0 },
   ];
   for (const row of clanRows) {
     kingCounts.set(row.kingId, (kingCounts.get(row.kingId) ?? 0) + 1);
@@ -222,7 +226,7 @@ abstract class BaseClanRepository implements DataRepository {
   }
 
   async listExamRecords(
-    filters: { clanId?: string; examType?: ExamType; kingId?: string },
+    filters: { clanId?: string; examType?: ExamType; kingId?: string; query?: string },
     page: number,
     pageSize: number,
   ): Promise<{ items: ExamRecordRow[]; total: number }> {
@@ -234,6 +238,12 @@ abstract class BaseClanRepository implements DataRepository {
       filtered = filtered.filter((r) => r.type === filters.examType);
     if (filters.kingId)
       filtered = filtered.filter((r) => r.kingId === filters.kingId);
+    const query = filters.query?.trim().toLocaleLowerCase("ko-KR");
+    if (query) {
+      filtered = filtered.filter((r) =>
+        `${r.personName} ${r.residence}`.toLocaleLowerCase("ko-KR").includes(query),
+      );
+    }
 
     const total = filtered.length;
     const start = (page - 1) * pageSize;

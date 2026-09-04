@@ -19,6 +19,11 @@ function normalizePage(value: string | string[] | undefined): number {
   return Math.max(1, parseInt(raw ?? "1", 10) || 1);
 }
 
+function normalizeText(value: string | string[] | undefined): string {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw?.trim().slice(0, 80) ?? "";
+}
+
 export default async function ClanDetailPage({
   params,
   searchParams,
@@ -35,11 +40,14 @@ export default async function ClanDetailPage({
   const sp = await searchParams;
   const activeExam = normalizeExam(sp.exam);
   const examType = activeExam === "all" ? undefined : activeExam;
+  const searchQuery = normalizeText(sp.q);
+  const requestedKingId = normalizeText(sp.king);
+  const kingId = detail.byKing.some((king) => king.kingId === requestedKingId) ? requestedKingId : "";
 
   const pageNum = normalizePage(sp.page);
   const [{ items, total }, allRows, clanLocations] = await Promise.all([
     repository.listExamRecords(
-      { clanId: clanId, examType },
+      { clanId: clanId, examType, kingId: kingId || undefined, query: searchQuery || undefined },
       pageNum,
       PAGE_SIZE,
     ),
@@ -47,9 +55,14 @@ export default async function ClanDetailPage({
     repository.getClanLocations(clanId),
   ]);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const baseHref = examType
-    ? `/clans/${clanId}?exam=${examType}`
-    : `/clans/${clanId}`;
+  const queryParams = new URLSearchParams();
+  if (examType) queryParams.set("exam", examType);
+  if (searchQuery) queryParams.set("q", searchQuery);
+  if (kingId) queryParams.set("king", kingId);
+  const queryString = queryParams.toString();
+  const baseHref = queryString ? `/clans/${clanId}?${queryString}` : `/clans/${clanId}`;
+  const clearParams = examType ? `?exam=${encodeURIComponent(examType)}` : "";
+  const clearHref = `/clans/${clanId}${clearParams}`;
   const timelineMax = detail.byKing.reduce((m, k) => Math.max(m, k.count), 0);
 
   return (
@@ -61,9 +74,13 @@ export default async function ClanDetailPage({
       mapRows={allRows.items.map(({ year, residence }) => ({ year, residence }))}
       clanLocations={clanLocations}
       totalPages={totalPages}
+      totalRecords={total}
       pageNum={pageNum}
       baseHref={baseHref}
+      clearHref={clearHref}
       activeExam={activeExam}
+      searchQuery={searchQuery}
+      kingId={kingId}
       timelineMax={timelineMax}
     />
   );

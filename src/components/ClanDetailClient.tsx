@@ -23,9 +23,13 @@ interface Props {
   mapRows: MapRecord[];
   clanLocations: ClanLocation[];
   totalPages: number;
+  totalRecords: number;
   pageNum: number;
   baseHref: string;
+  clearHref: string;
   activeExam: ExamType | "all";
+  searchQuery: string;
+  kingId: string;
   timelineMax: number;
 }
 
@@ -37,9 +41,13 @@ export default function ClanDetailClient({
   mapRows,
   clanLocations,
   totalPages,
+  totalRecords,
   pageNum,
   baseHref,
+  clearHref,
   activeExam,
+  searchQuery,
+  kingId,
   timelineMax,
 }: Props) {
   const { min: minYear, max: maxYear } = getMapYearRange(mapRows);
@@ -129,6 +137,19 @@ export default function ClanDetailClient({
             <h2 className="mb-3 font-display text-lg">합격 연령</h2>
             <AgeDistribution stats={detail.ageStats} />
           </section>
+          <section data-animate="fade">
+            <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
+            <div className="mb-3 flex gap-px">
+              {detail.byKing.map((k) => {
+                const intensity = timelineMax > 0 ? k.count / timelineMax : 0;
+                return (
+                  <div key={k.kingId} className="h-2 flex-1 rounded-sm" style={{ backgroundColor: `rgba(14,77,122,${intensity > 0 ? 0.18 + intensity * 0.82 : 0.06})` }} title={`${k.kingName} ${formatNumber(k.count)}명`} aria-label={`${k.kingName} ${k.count}명`} />
+                );
+              })}
+            </div>
+            <PeriodTimeline data={detail.byKing.map((k: KingCount) => ({ label: k.kingName, value: k.count }))} max={timelineMax} />
+          </section>
+
           <section>
             <h2 className="mb-3 font-display text-lg">주요 거주지</h2>
             <div className="table-scroll">
@@ -163,25 +184,31 @@ export default function ClanDetailClient({
           </section>
 
           <section data-animate="fade">
-            <h2 className="mb-3 font-display text-lg">시대별 기록</h2>
-            <div className="mb-3 flex gap-px">
-              {detail.byKing.map((k) => {
-                const intensity = timelineMax > 0 ? k.count / timelineMax : 0;
-                return (
-                  <div key={k.kingId} className="h-2 flex-1 rounded-sm" style={{ backgroundColor: `rgba(14,77,122,${intensity > 0 ? 0.18 + intensity * 0.82 : 0.06})` }} title={`${k.kingName} ${formatNumber(k.count)}명`} aria-label={`${k.kingName} ${k.count}명`} />
-                );
-              })}
-            </div>
-            <PeriodTimeline data={detail.byKing.map((k: KingCount) => ({ label: k.kingName, value: k.count }))} max={timelineMax} />
-          </section>
-
-          <section data-animate="fade">
             <h2 className="mb-3 font-display text-lg">시험 종류</h2>
-            <ExamTypeTabs counts={detail.examTypeStats as ExamTypeStat[]} active={activeExam} baseHref={`/clans/${rawId}`} />
+            <ExamTypeTabs counts={detail.examTypeStats as ExamTypeStat[]} active={activeExam} baseHref={baseHref} />
           </section>
 
           <section data-animate="fade">
             <h2 className="mb-3 font-display text-lg">합격자 목록</h2>
+            <form method="get" action={`/clans/${rawId}`} className="mb-4 flex flex-wrap items-end gap-2 border border-line p-3">
+              {activeExam !== "all" && <input type="hidden" name="exam" value={activeExam} />}
+              <label className="min-w-[12rem] flex-1 text-xs text-ink-2">
+                이름 또는 거주지
+                <input name="q" defaultValue={searchQuery} placeholder="검색어 입력" className="search-input mt-1 w-full" />
+              </label>
+              <label className="text-xs text-ink-2">
+                왕대
+                <select name="king" defaultValue={kingId} className="search-input mt-1 min-w-32">
+                  <option value="">전체 왕대</option>
+                  {detail.byKing.filter((king) => king.count > 0).map((king) => (
+                    <option key={king.kingId} value={king.kingId}>{king.kingName}</option>
+                  ))}
+                </select>
+              </label>
+              <button type="submit" className="btn-primary px-4 py-2 text-sm">검색</button>
+              {(searchQuery || kingId) && <a href={clearHref} className="btn-secondary px-4 py-2 text-sm hover:no-underline">초기화</a>}
+            </form>
+            <p className="mb-2 text-xs text-ink-3">검색 결과 {formatNumber(totalRecords)}건</p>
             <PersonTable rows={items} />
             <div className="mt-4">
               <Pagination page={pageNum} totalPages={totalPages} baseHref={baseHref} />

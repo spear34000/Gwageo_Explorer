@@ -3,6 +3,7 @@
 import type { ExamType } from "@/lib/data/types";
 import { EXAM_TYPE_LABELS } from "@/lib/data/types";
 import { formatNumber } from "@/lib/format";
+import Link from "next/link";
 
 interface ExamTypeTabsProps {
   /** 화면에 표시할 시험 종류 탭 순서 (all 탭은 별도로 "전체 (N)" 추가) */
@@ -26,7 +27,7 @@ function withExamParam(baseHref: string, exam: ExamType | null): string {
 }
 
 /**
- * 시험 종류 필터 탭. 각 탭은 GET 이동이므로 <a> 링크.
+ * 시험 종류 필터 탭. 클라이언트 전환으로 현재 스크롤 위치를 유지한다.
  * "전체 (N)" 탭을 먼저 표시하고, 그 뒤에 counts 순서대로 종류 탭을 붙인다.
  */
 export default function ExamTypeTabs({ counts, active, baseHref }: ExamTypeTabsProps) {
@@ -45,16 +46,17 @@ export default function ExamTypeTabs({ counts, active, baseHref }: ExamTypeTabsP
   return (
     <div role="tablist" aria-label="시험 종류 필터" className="tab-list">
       {tabs.map((tab) => (
-        <a
+        <Link
           key={tab.key}
           role="tab"
           aria-selected={active === tab.key}
           href={tab.href}
+          scroll={false}
           className="tab-btn hover:no-underline"
         >
           {tab.label}
           <span className="tab-count">{formatNumber(tab.count)}</span>
-        </a>
+        </Link>
       ))}
     </div>
   );
