@@ -163,11 +163,9 @@
 
   @media (min-width: 1024px) {
     .clan-overview-grid {
+      position: relative;
+      left: max(calc((100vw - 64rem) / -2 - 1rem), -12rem);
       grid-template-columns: 300px minmax(0, 1fr);
-    }
-
-    .clan-map-column {
-      transform: translateX(calc((100vw - 64rem) / -2 - 1rem));
     }
   }
 
