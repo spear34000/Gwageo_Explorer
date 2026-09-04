@@ -180,11 +180,15 @@
       width: calc(100% + var(--clan-sidebar-shift));
       grid-template-columns: 300px minmax(0, 1fr);
       grid-template-areas:
-        "map title"
-        "map ai"
+        ". title"
+        ". ai"
         "map content";
       column-gap: 1.5rem;
       row-gap: 2rem;
+    }
+
+    .clan-map-column {
+      margin-top: -4rem;
     }
   }
 
