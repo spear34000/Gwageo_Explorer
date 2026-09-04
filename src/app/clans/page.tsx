@@ -8,6 +8,7 @@ import { formatNumber } from "@/lib/format";
 import SearchBar from "@/components/SearchBar";
 import RankingTable from "@/components/RankingTable";
 import EmptyState from "@/components/EmptyState";
+import { SEARCH_RESULT_COLUMNS } from "@/lib/search-results";
 
 export default async function ClansPage({
   searchParams,
@@ -21,8 +22,6 @@ export default async function ClansPage({
   const sortBy: ExamColumn =
     sort && sort in EXAM_COLUMN_LABELS ? (sort as ExamColumn) : "total";
 
-  const ranking = await repository.clanRanking(sortBy);
-
   return (
     <div>
       <div className="pb-4">
@@ -32,12 +31,19 @@ export default async function ClansPage({
       {hasQuery ? (
         <SearchResults query={query} />
       ) : (
-        <section aria-label="본관 목록">
-          <h1 className="font-display mb-4 text-2xl font-bold">본관 목록</h1>
-          <RankingTable clans={ranking} sortBy={sortBy} />
-        </section>
+        <ClanRankingSection sortBy={sortBy} />
       )}
     </div>
+  );
+}
+
+async function ClanRankingSection({ sortBy }: { sortBy: ExamColumn }) {
+  const ranking = await repository.clanRanking(sortBy);
+  return (
+    <section aria-label="본관 목록">
+      <h1 className="font-display mb-4 text-2xl font-bold">본관 목록</h1>
+      <RankingTable clans={ranking} sortBy={sortBy} />
+    </section>
   );
 }
 
@@ -60,23 +66,42 @@ async function SearchResults({ query }: { query: string }) {
       <h1 className="font-display mb-4 text-2xl font-bold">
         &quot;{query}&quot; 검색 결과
       </h1>
-      <ul className="divide-y divide-line border-y border-line">
-        {results.map(({ clan, matchLabel }) => (
-          <li key={clan.id} className="py-3">
-            <a href={`/clans/${clan.id}`} className="font-medium text-accent">
-              {clan.name}
-            </a>
-            <span className="ml-2 text-xs text-ink-3">{matchLabel}</span>
-            <p className="mt-1 text-sm text-ink-2">
-              전체 {formatNumber(clan.total)}명 ·{" "}
-              {EXAM_TYPE_ORDER.map(
-                (type) =>
-                  `${EXAM_COLUMN_LABELS[type]} ${formatNumber(clan[type])}`,
-              ).join(" · ")}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <div className="table-scroll">
+        <table className="data-table min-w-[720px]">
+          <caption className="sr-only">{query} 검색 결과 본관별 합격 통계</caption>
+          <thead>
+            <tr>
+              {SEARCH_RESULT_COLUMNS.map((column) => (
+                <th
+                  key={column.key}
+                  scope="col"
+                  className={column.numeric ? "num" : undefined}
+                >
+                  {column.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {results.map(({ clan, matchLabel }) => (
+              <tr key={clan.id}>
+                <td>
+                  <a href={`/clans/${clan.id}`} className="font-medium text-accent">
+                    {clan.name}
+                  </a>
+                </td>
+                <td className="text-xs text-ink-3">{matchLabel}</td>
+                <td className="num font-medium">{formatNumber(clan.total)}</td>
+                {EXAM_TYPE_ORDER.map((type) => (
+                  <td key={type} className="num">
+                    {formatNumber(clan[type])}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
