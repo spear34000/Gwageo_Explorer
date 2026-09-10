@@ -72,19 +72,17 @@ dev3100.err
 /.playwright-mcp/
 
 # crawl outputs (local only)
-namu_famous_names.json
 famous-db.json
 famous-db.csv
 wiki_links.json
 wiki_links.csv
-namuwiki_links.json
-namuwiki_links.csv
-namuwiki_famous.json
-namuwiki_famous_names.json
 pplIds.json
-namu*.log
-namu_*.log
 wiki.log
+wiki_*.log
+ency_urls.json
+ency_done.json
+ency_persons.json
+ency.log
 crawl-aks.log
 crawl-aks.err
 /.tooling/
