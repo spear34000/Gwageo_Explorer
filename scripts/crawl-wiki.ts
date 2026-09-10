@@ -7,13 +7,17 @@ function sleep(ms: number){ return new Promise(r=>setTimeout(r, ms)); }
 
 async function fetchText(url: string): Promise<string | null> {
   for(let attempt=0; attempt<3; attempt++){
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
     try{
-      const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html' } });
+      const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html' }, signal: ctrl.signal });
+      clearTimeout(timer);
       if(res.status===404) return null;
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
       const buf = await res.arrayBuffer();
       return new TextDecoder('utf-8').decode(buf);
     }catch(e){
+      clearTimeout(timer);
       if(attempt===2) throw e;
       await sleep(1000);
     }
@@ -25,17 +29,29 @@ async function main(){
   const j = JSON.parse(fs.readFileSync('prisma/real-data.json','utf8')) as { clans: { id:string, name:string }[] };
   console.log(`total clans: ${j.clans.length}`);
   const results: { clanId:string, name:string, url:string, hasInfobox:boolean, famousCount:number, famous: {name:string, url:string}[] }[] = [];
+  try {
+    const prev = JSON.parse(fs.readFileSync('wiki_links.json','utf8')) as typeof results;
+    for (const r of prev) results.push(r);
+    console.log(`resumed with ${results.length} existing pages`);
+  } catch {}
+  const doneIds = new Set(results.map(r => r.clanId));
+  const FROM = parseInt(process.env.FROM ?? '0', 10);
+  const TO = parseInt(process.env.TO ?? String(j.clans.length), 10);
+  console.log(`range ${FROM}..${TO}`);
   let checked = 0;
-  for(const clan of j.clans){
+  const slice = j.clans.slice(FROM, TO);
+  for(const clan of slice){
+    if (doneIds.has(clan.id)) continue;
     // 위키백과 URL은 공백을 _ 로 (예: 풍천_임씨)
     const title = clan.name.replace(/ /g, '_');
     const url = `https://ko.wikipedia.org/wiki/${encodeURIComponent(title).replace(/%20/g,'_')}`;
     // actually encode then keep _ - encodeURIComponent encodes _ ? No, _ is unreserved, stays _. But spaces were replaced with _. So use encodeURI for Korean
     const url2 = `https://ko.wikipedia.org/wiki/${encodeURI(title)}`;
-    const html = await fetchText(url2);
+    let html: string | null = null;
+    try { html = await fetchText(url2); } catch(e:any){ console.warn(`fail ${clan.name}: ${e.message}`); }
     checked++;
     if(html===null){
-      if(checked % 100===0) console.log(`checked ${checked}/${j.clans.length} -> ${results.length} pages`);
+      if(checked % 100===0) console.log(`checked ${checked} -> pages ${results.length}`);
       await sleep(DELAY);
       continue;
     }
@@ -83,12 +99,11 @@ async function main(){
       results.push({ clanId: clan.id, name: clan.name, url: url2, hasInfobox, famousCount: deduped.length, famous: deduped.slice(0,30) });
       if(deduped.length>0) console.log(`FOUND ${clan.name} (${deduped.length}명) -> ${url2}`);
     }
-    if(checked % 100===0) console.log(`checked ${checked}/${j.clans.length} -> ${results.length} pages, famous total ${results.reduce((a,r)=>a+r.famousCount,0)}`);
-    await sleep(DELAY);
-    if(checked >= 800) {
-      console.log(`limit 800 reached`);
-      break;
+    if(checked % 100===0) {
+      console.log(`checked ${checked} -> pages ${results.length}, famous total ${results.reduce((a,r)=>a+r.famousCount,0)}`);
+      fs.writeFileSync('wiki_links.json', JSON.stringify(results));
     }
+    await sleep(DELAY);
   }
   console.log(`done: checked ${checked}, pages ${results.length}`);
   fs.writeFileSync('wiki_links.json', JSON.stringify(results, null, 2));

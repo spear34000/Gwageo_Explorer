@@ -89,7 +89,7 @@ $env:JAVA_HOME='C:\Program Files\Java\jdk-17'
 
 ## 본관별 유명인 DB
 
-- `prisma/famous-data.json` — 위키백과 본관 문서 infobox `주요 인물` + Wikidata 배우/개그맨/가수(`P53`→본관) 4,629명, 371개 본관 (CC BY-SA 4.0 + CC0, 출처: ko.wikipedia.org·wikidata.org)
+- `prisma/famous-data.json` — 위키백과 본관 문서 `주요 인물` + Wikidata 연예인(`P53`→본관) + 민족문화대백과 인물(`본관` 필드) 11,235명, 681개 본관 (CC BY-SA 4.0 + CC0 + 공공저작물 자유이용, 출처: ko.wikipedia.org·wikidata.org·encykorea.aks.ac.kr)
 - 생성: `npx tsx scripts/crawl-wiki.ts` → `npx tsx scripts/merge-famous.ts`
 - 나무위키 병합본(`famous-db.json`, 6,341명)은 CC BY-NC-SA라 로컬 전용으로 유지, 푸시하지 않음
 
