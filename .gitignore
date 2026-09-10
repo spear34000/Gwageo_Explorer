@@ -70,4 +70,21 @@ dev3100.err
 /.omo/
 /.codegraph/
 /.playwright-mcp/
+
+# crawl outputs (local only)
+namu_famous_names.json
+famous-db.json
+famous-db.csv
+wiki_links.json
+wiki_links.csv
+namuwiki_links.json
+namuwiki_links.csv
+namuwiki_famous.json
+namuwiki_famous_names.json
+pplIds.json
+namu*.log
+namu_*.log
+wiki.log
+crawl-aks.log
+crawl-aks.err
 /.tooling/
