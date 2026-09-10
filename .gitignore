@@ -85,4 +85,7 @@ ency_persons.json
 ency.log
 crawl-aks.log
 crawl-aks.err
+wiki_sections.json
+wiki_sec.log
+wiki_c1.log
 /.tooling/
