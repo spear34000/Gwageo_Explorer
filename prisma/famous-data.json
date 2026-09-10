@@ -1,8 +1,12 @@
 {
   "meta": {
     "source": "ko.wikipedia.org 본관 문서 infobox 주요 인물 (CC BY-SA 4.0, 출처 표기)",
-    "generatedAt": "2026-09-10T02:28:16.483Z",
-    "count": 4549
+    "generatedAt": "2026-09-10T03:43:30.098Z",
+    "count": 4629,
+    "sources": [
+      "ko.wikipedia.org (CC BY-SA 4.0)",
+      "wikidata.org (CC0)"
+    ]
   },
   "items": [
     {
@@ -59141,6 +59145,1126 @@
       "urls": [
         "https://ko.wikipedia.org/wiki/%EB%B0%95%EC%8A%B9%EA%B5%AD_(%EC%A0%95%EC%B9%98%EC%9D%B8)"
       ]
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박선영",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q625905"
+      ],
+      "description": "대한민국의 배우(1976)"
+    },
+    {
+      "clanId": "광산-김",
+      "clanName": "광산 김씨",
+      "bonGwan": "광산",
+      "surname": "김",
+      "personName": "현빈",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q380118"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "수애",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q491071"
+      ],
+      "description": null
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박해일",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q490380"
+      ],
+      "description": "대한민국 배우"
+    },
+    {
+      "clanId": "경주-김",
+      "clanName": "경주 김씨",
+      "bonGwan": "경주",
+      "surname": "김",
+      "personName": "김성령",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q4502171"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박하선",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q496413"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "해주-오",
+      "clanName": "해주 오씨",
+      "bonGwan": "해주",
+      "surname": "오",
+      "personName": "오연서",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q486536"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "의령-남",
+      "clanName": "의령 남씨",
+      "bonGwan": "의령",
+      "surname": "남",
+      "personName": "남보라",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q624290"
+      ],
+      "description": "대한민국의 배우, 작가, CEO, 유튜버"
+    },
+    {
+      "clanId": "경주-김",
+      "clanName": "경주 김씨",
+      "bonGwan": "경주",
+      "surname": "김",
+      "personName": "강예원",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q333192"
+      ],
+      "description": "대한민국의 배우 (1979년 출생)"
+    },
+    {
+      "clanId": "경주-김",
+      "clanName": "경주 김씨",
+      "bonGwan": "경주",
+      "surname": "김",
+      "personName": "김성균",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q3616350"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "전주-이",
+      "clanName": "전주 이씨",
+      "bonGwan": "전주",
+      "surname": "이",
+      "personName": "이준호",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q488423"
+      ],
+      "description": "대한민국의 가수"
+    },
+    {
+      "clanId": "전주-이",
+      "clanName": "전주 이씨",
+      "bonGwan": "전주",
+      "surname": "이",
+      "personName": "이진욱",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q484021"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "광산-김",
+      "clanName": "광산 김씨",
+      "bonGwan": "광산",
+      "surname": "김",
+      "personName": "김옥빈",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q456609"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "인천-이",
+      "clanName": "인천 이씨",
+      "bonGwan": "인천",
+      "surname": "이",
+      "personName": "이현우",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q488838"
+      ],
+      "description": "대한민국의 배우 (1993년 출생)"
+    },
+    {
+      "clanId": "함종-어",
+      "clanName": "함종 어씨",
+      "bonGwan": "함종",
+      "surname": "어",
+      "personName": "류수영",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q623627"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "순흥-안",
+      "clanName": "순흥 안씨",
+      "bonGwan": "순흥",
+      "surname": "안",
+      "personName": "유연석",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q77621"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "경주-김",
+      "clanName": "경주 김씨",
+      "bonGwan": "경주",
+      "surname": "김",
+      "personName": "김선아",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q488864"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "전주-이",
+      "clanName": "전주 이씨",
+      "bonGwan": "전주",
+      "surname": "이",
+      "personName": "이윤지",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q623847"
+      ],
+      "description": "대한민국의 여자 배우"
+    },
+    {
+      "clanId": "파주-염",
+      "clanName": "파주 염씨",
+      "bonGwan": "파주",
+      "surname": "염",
+      "personName": "염정아",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q489326"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "풍천-임",
+      "clanName": "풍천 임씨",
+      "bonGwan": "풍천",
+      "surname": "임",
+      "personName": "임시완",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q82788"
+      ],
+      "description": "대한민국의 배우, 가수, 텔레비전 진행자"
+    },
+    {
+      "clanId": "태인-경",
+      "clanName": "태인 경씨",
+      "bonGwan": "태인",
+      "surname": "경",
+      "personName": "경수진",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q2944938"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "곡부-공",
+      "clanName": "곡부 공씨",
+      "bonGwan": "곡부",
+      "surname": "공",
+      "personName": "공유",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q623436"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "연안-이",
+      "clanName": "연안 이씨",
+      "bonGwan": "연안",
+      "surname": "이",
+      "personName": "이청아",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q485308"
+      ],
+      "description": "대한민국의 배우, 모델"
+    },
+    {
+      "clanId": "경주-김",
+      "clanName": "경주 김씨",
+      "bonGwan": "경주",
+      "surname": "김",
+      "personName": "김희애",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q484360"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "광산-김",
+      "clanName": "광산 김씨",
+      "bonGwan": "광산",
+      "surname": "김",
+      "personName": "김영광",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q487056"
+      ],
+      "description": "대한민국의 배우이자 모델"
+    },
+    {
+      "clanId": "경주-이",
+      "clanName": "경주 이씨",
+      "bonGwan": "경주",
+      "surname": "이",
+      "personName": "이상윤",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q625918"
+      ],
+      "description": null
+    },
+    {
+      "clanId": "성산-배",
+      "clanName": "성산 배씨",
+      "bonGwan": "성산",
+      "surname": "배",
+      "personName": "수지",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q464645"
+      ],
+      "description": "대한민국의 가수이자 배우"
+    },
+    {
+      "clanId": "은진-송",
+      "clanName": "은진 송씨",
+      "bonGwan": "은진",
+      "surname": "송",
+      "personName": "송윤아",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q493026"
+      ],
+      "description": "대한민국의 배우, 모델"
+    },
+    {
+      "clanId": "강릉-김",
+      "clanName": "강릉 김씨",
+      "bonGwan": "강릉",
+      "surname": "김",
+      "personName": "김래원",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q494539"
+      ],
+      "description": "대한민국의 남자 배우"
+    },
+    {
+      "clanId": "은진-송",
+      "clanName": "은진 송씨",
+      "bonGwan": "은진",
+      "surname": "송",
+      "personName": "송일국",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q484840"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "파평-윤",
+      "clanName": "파평 윤씨",
+      "bonGwan": "파평",
+      "surname": "윤",
+      "personName": "윤소희",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q15285465"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "김해-허",
+      "clanName": "김해 허씨",
+      "bonGwan": "김해",
+      "surname": "허",
+      "personName": "허성태",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q21825451"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "봉화-금",
+      "clanName": "봉화 금씨",
+      "bonGwan": "봉화",
+      "surname": "금",
+      "personName": "금새록",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q55736701"
+      ],
+      "description": "대한민국의 모델 겸 배우"
+    },
+    {
+      "clanId": "경주-김",
+      "clanName": "경주 김씨",
+      "bonGwan": "경주",
+      "surname": "김",
+      "personName": "김혜은",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q10855924"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "능성-구",
+      "clanName": "능성 구씨",
+      "bonGwan": "능성",
+      "surname": "구",
+      "personName": "구교환",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q28700273"
+      ],
+      "description": "대한민국의 배우, 영화 감독, 제작자"
+    },
+    {
+      "clanId": "평창-이",
+      "clanName": "평창 이씨",
+      "bonGwan": "평창",
+      "surname": "이",
+      "personName": "이선빈",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q22974707"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "평산-신",
+      "clanName": "평산 신씨",
+      "bonGwan": "평산",
+      "surname": "신",
+      "personName": "신은수",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q27695643"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "전주-이",
+      "clanName": "전주 이씨",
+      "bonGwan": "전주",
+      "surname": "이",
+      "personName": "이레",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q16176528"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "평산-신",
+      "clanName": "평산 신씨",
+      "bonGwan": "평산",
+      "surname": "신",
+      "personName": "신동미",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q16978733"
+      ],
+      "description": "대한민국의 여자 배우"
+    },
+    {
+      "clanId": "영일-정",
+      "clanName": "영일 정씨",
+      "bonGwan": "영일",
+      "surname": "정",
+      "personName": "정은채",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q5120477"
+      ],
+      "description": "대한민국의 배우, 모델"
+    },
+    {
+      "clanId": "연안-김",
+      "clanName": "연안 김씨",
+      "bonGwan": "연안",
+      "surname": "김",
+      "personName": "김예원",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12588125"
+      ],
+      "description": "대한민국의 배우 (1987년 출생)"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박정민",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12597061"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "고창-오",
+      "clanName": "고창 오씨",
+      "bonGwan": "고창",
+      "surname": "오",
+      "personName": "오정세",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12608050"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "창녕-성",
+      "clanName": "창녕 성씨",
+      "bonGwan": "창녕",
+      "surname": "성",
+      "personName": "제인",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q53316644"
+      ],
+      "description": "대한민국의 가수, 걸 그룹 모모랜드의 멤버"
+    },
+    {
+      "clanId": "영월-엄",
+      "clanName": "영월 엄씨",
+      "bonGwan": "영월",
+      "surname": "엄",
+      "personName": "엄현경",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12606652"
+      ],
+      "description": "대한민국의 여자 배우"
+    },
+    {
+      "clanId": "안동-권",
+      "clanName": "안동 권씨",
+      "bonGwan": "안동",
+      "surname": "권",
+      "personName": "권해효",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q6771032"
+      ],
+      "description": "대한민국의 배우, 사회운동가"
+    },
+    {
+      "clanId": "경주-이",
+      "clanName": "경주 이씨",
+      "bonGwan": "경주",
+      "surname": "이",
+      "personName": "이동휘",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q18013648"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "광산-김",
+      "clanName": "광산 김씨",
+      "bonGwan": "광산",
+      "surname": "김",
+      "personName": "김영옥",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12588052"
+      ],
+      "description": "대한민국의 배우, 성우"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박세완",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q31178948"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "동래-정",
+      "clanName": "동래 정씨",
+      "bonGwan": "동래",
+      "surname": "정",
+      "personName": "정혜성",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q17349299"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박지후",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q96189818"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "원주-원",
+      "clanName": "원주 원씨",
+      "bonGwan": "원주",
+      "surname": "원",
+      "personName": "원진아",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q47466705"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "성주-도",
+      "clanName": "성주 도씨",
+      "bonGwan": "성주",
+      "surname": "도",
+      "personName": "도상우",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q18203648"
+      ],
+      "description": null
+    },
+    {
+      "clanId": "풍양-조",
+      "clanName": "풍양 조씨",
+      "bonGwan": "풍양",
+      "surname": "조",
+      "personName": "소이현",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q6711159"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "신창-표",
+      "clanName": "신창 표씨",
+      "bonGwan": "신창",
+      "surname": "표",
+      "personName": "표예진",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q24862117"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "경주-손",
+      "clanName": "경주 손씨",
+      "bonGwan": "경주",
+      "surname": "손",
+      "personName": "손병호",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12602696"
+      ],
+      "description": null
+    },
+    {
+      "clanId": "연안-김",
+      "clanName": "연안 김씨",
+      "bonGwan": "연안",
+      "surname": "김",
+      "personName": "김정난",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q6678598"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "강릉-김",
+      "clanName": "강릉 김씨",
+      "bonGwan": "강릉",
+      "surname": "김",
+      "personName": "김고은",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q6408653"
+      ],
+      "description": "대한민국의 여자 배우"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박상원",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12596709"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "순흥-안",
+      "clanName": "순흥 안씨",
+      "bonGwan": "순흥",
+      "surname": "안",
+      "personName": "안재현",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q9006285"
+      ],
+      "description": "대한민국의 배우, 모델"
+    },
+    {
+      "clanId": "초계-변",
+      "clanName": "초계 변씨",
+      "bonGwan": "초계",
+      "surname": "변",
+      "personName": "변요한",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q18605168"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "밀양-박",
+      "clanName": "밀양 박씨",
+      "bonGwan": "밀양",
+      "surname": "박",
+      "personName": "박진주",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12597220"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "인동-장",
+      "clanName": "인동 장씨",
+      "bonGwan": "인동",
+      "surname": "장",
+      "personName": "장승조",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q18685050"
+      ],
+      "description": null
+    },
+    {
+      "clanId": "이천-서",
+      "clanName": "이천 서씨",
+      "bonGwan": "이천",
+      "surname": "서",
+      "personName": "서예지",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q16181177"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "청송-심",
+      "clanName": "청송 심씨",
+      "bonGwan": "청송",
+      "surname": "심",
+      "personName": "심소영",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q31180755"
+      ],
+      "description": "대한민국의 모델, 방송인이자 배우 (1995년 출생)"
+    },
+    {
+      "clanId": "여흥-민",
+      "clanName": "여흥 민씨",
+      "bonGwan": "여흥",
+      "surname": "민",
+      "personName": "민도희",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q16080950"
+      ],
+      "description": "대한민국의 전 가수, 배우, 1994년"
+    },
+    {
+      "clanId": "온양-방",
+      "clanName": "온양 방씨",
+      "bonGwan": "온양",
+      "surname": "방",
+      "personName": "방선희",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q139932840"
+      ],
+      "description": null
+    },
+    {
+      "clanId": "해주-오",
+      "clanName": "해주 오씨",
+      "bonGwan": "해주",
+      "surname": "오",
+      "personName": "오연수",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q5610843"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "충주-지",
+      "clanName": "충주 지씨",
+      "bonGwan": "충주",
+      "surname": "지",
+      "personName": "지창욱",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q625128"
+      ],
+      "description": "대한민국의 남자 배우"
+    },
+    {
+      "clanId": "광산-김",
+      "clanName": "광산 김씨",
+      "bonGwan": "광산",
+      "surname": "김",
+      "personName": "유이",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q489006"
+      ],
+      "description": "대한민국의 가수였던 배우. 걸그룹 애프터스쿨의 전 멤버"
+    },
+    {
+      "clanId": "풍천-노",
+      "clanName": "풍천 노씨",
+      "bonGwan": "풍천",
+      "surname": "노",
+      "personName": "노윤서",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q111801829"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "나주-나",
+      "clanName": "나주 나씨",
+      "bonGwan": "나주",
+      "surname": "나",
+      "personName": "나문희",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q4022731"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "충주-지",
+      "clanName": "충주 지씨",
+      "bonGwan": "충주",
+      "surname": "지",
+      "personName": "지승현",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q18016019"
+      ],
+      "description": "대한민국 배우"
+    },
+    {
+      "clanId": "안동-권",
+      "clanName": "안동 권씨",
+      "bonGwan": "안동",
+      "surname": "권",
+      "personName": "권나라",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q14493927"
+      ],
+      "description": "대한민국의 가수 겸 배우"
+    },
+    {
+      "clanId": "남양-방",
+      "clanName": "남양 방씨",
+      "bonGwan": "남양",
+      "surname": "방",
+      "personName": "설인아",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q30138752"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "해주-오",
+      "clanName": "해주 오씨",
+      "bonGwan": "해주",
+      "surname": "오",
+      "personName": "오나라",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q12607753"
+      ],
+      "description": "대한민국의 여자 배우"
+    },
+    {
+      "clanId": "의령-옥",
+      "clanName": "의령 옥씨",
+      "bonGwan": "의령",
+      "surname": "옥",
+      "personName": "옥자연",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q55732261"
+      ],
+      "description": "대한민국의 배우 (1988)"
+    },
+    {
+      "clanId": "전주-김",
+      "clanName": "전주 김씨",
+      "bonGwan": "전주",
+      "surname": "김",
+      "personName": "원지안",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q108314332"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "광산-김",
+      "clanName": "광산 김씨",
+      "bonGwan": "광산",
+      "surname": "김",
+      "personName": "김신록",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q107109045"
+      ],
+      "description": "대한민국의 배우"
+    },
+    {
+      "clanId": "순흥-안",
+      "clanName": "순흥 안씨",
+      "bonGwan": "순흥",
+      "surname": "안",
+      "personName": "안효섭",
+      "sources": [
+        "wikidata"
+      ],
+      "urls": [
+        "https://www.wikidata.org/wiki/Q24000262"
+      ],
+      "description": "대한민국의 배우"
     }
   ]
 }
