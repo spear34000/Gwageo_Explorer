@@ -1,9 +1,39 @@
+import fs from "node:fs";
+import path from "node:path";
 import { repository } from "@/lib/data/repository";
 import { formatNumber } from "@/lib/format";
 import { EXAM_COLUMN_LABELS, EXAM_TYPE_ORDER } from "@/lib/data/types";
 import type { ClanDetail } from "@/lib/data/types";
 
 export const dynamic = "force-dynamic";
+
+interface FamousItem {
+  clanId: string;
+  personName: string;
+}
+
+let famousCache: FamousItem[] | null = null;
+
+function loadFamous(): FamousItem[] {
+  if (famousCache) return famousCache;
+  try {
+    const raw = fs.readFileSync(
+      path.join(process.cwd(), "prisma", "famous-data.json"),
+      "utf8",
+    );
+    famousCache = (JSON.parse(raw) as { items: FamousItem[] }).items;
+  } catch {
+    famousCache = [];
+  }
+  return famousCache;
+}
+
+export function getFamousNames(clanId: string, limit = 12): string[] {
+  return loadFamous()
+    .filter((i) => i.clanId === clanId)
+    .slice(0, limit)
+    .map((i) => i.personName);
+}
 
 const BASE_URL =
   process.env.NVIDIA_BASE_URL ?? "https://integrate.api.nvidia.com/v1";
@@ -19,7 +49,11 @@ const TONE_INSTRUCTIONS: Record<string, string> = {
 
 const DEFAULT_TONE = "memes";
 
-function buildPrompt(detail: ClanDetail, tone: string): string {
+export function buildPrompt(
+  detail: ClanDetail,
+  tone: string,
+  famousNames: string[] = [],
+): string {
   const toneInstruction =
     TONE_INSTRUCTIONS[tone] ?? TONE_INSTRUCTIONS[DEFAULT_TONE];
   const typeLine = EXAM_TYPE_ORDER.map(
@@ -35,6 +69,8 @@ function buildPrompt(detail: ClanDetail, tone: string): string {
     .slice(0, 3)
     .map((r) => `${r.residence} ${formatNumber(r.count)}건`)
     .join(", ");
+  const famousLine =
+    famousNames.length > 0 ? `이 본관 출신 유명인: ${famousNames.join(", ")}` : "";
 
   return [
     "너는 한국 인터넷 밈 문화에 능통한 개그 작가다. 조선시대 과거시험 데이터를 가지고 '본관 리뷰'를 쓴다.",
@@ -46,6 +82,7 @@ function buildPrompt(detail: ClanDetail, tone: string): string {
     "- 실제 수치를 반드시 1개 이상 언급하되 숫자를 왜곡하지 말 것",
     "- 마케팅 광고체·'당신의 조상'류 표현·특정 인물이나 본관 비방 금지",
     "- 병맛은 악의 없는 유머로만",
+    "- 유명인을 언급할 땐 아래 목록에 있는 이름만 쓰고, 목록에 없는 인물은 지어내지 말 것",
     "출력 형식 (반드시 아래 두 줄 구조):",
     "한줄평: <10~20자 내외로 임팩트 있는 한 줄>",
     "본문: <2~3문장>",
@@ -55,6 +92,7 @@ function buildPrompt(detail: ClanDetail, tone: string): string {
     `유형별: ${typeLine}`,
     `합격자가 많은 왕: ${topKings}`,
     `주요 거주지: ${residences}`,
+    ...(famousLine ? [famousLine] : []),
   ].join("\n");
 }
 
@@ -79,6 +117,7 @@ export async function GET(request: Request) {
     if (!detail) {
       return Response.json({ error: "본관을 찾을 수 없습니다." }, { status: 404 });
     }
+    const famousNames = getFamousNames(detail.id);
 
     const nvidiaRes = await fetch(`${BASE_URL}/chat/completions`, {
       method: "POST",
@@ -88,7 +127,7 @@ export async function GET(request: Request) {
       },
     body: JSON.stringify({
       model: MODEL,
-      messages: [{ role: "user", content: buildPrompt(detail, tone) }],
+      messages: [{ role: "user", content: buildPrompt(detail, tone, famousNames) }],
       temperature: 0.9,
       top_p: 0.95,
       max_tokens: 300,
