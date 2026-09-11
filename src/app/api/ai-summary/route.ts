@@ -1,5 +1,5 @@
 import { repository } from "@/lib/data/repository";
-import { buildPrompt, DEFAULT_TONE, getFamousNames } from "@/lib/famous";
+import { buildPrompt, DEFAULT_TONE, pickFeaturedFamous } from "@/lib/famous";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     if (!detail) {
       return Response.json({ error: "본관을 찾을 수 없습니다." }, { status: 404 });
     }
-    const famousNames = getFamousNames(detail.id);
+    const featuredName = pickFeaturedFamous(detail.id);
 
     const nvidiaRes = await fetch(`${BASE_URL}/chat/completions`, {
       method: "POST",
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
       },
     body: JSON.stringify({
       model: MODEL,
-      messages: [{ role: "user", content: buildPrompt(detail, tone, famousNames) }],
+      messages: [{ role: "user", content: buildPrompt(detail, tone, [], featuredName) }],
       temperature: 0.9,
       top_p: 0.95,
       max_tokens: 300,

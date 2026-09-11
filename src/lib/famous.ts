@@ -32,6 +32,12 @@ export function getFamousNames(clanId: string, limit = 12): string[] {
     .map((i) => i.personName);
 }
 
+export function pickFeaturedFamous(clanId: string): string | null {
+  const names = getFamousNames(clanId, 30);
+  if (names.length === 0) return null;
+  return names[Math.floor(Math.random() * names.length)];
+}
+
 const TONE_INSTRUCTIONS: Record<string, string> = {
   memes: "허무·병맛 평결. 진지한 감정(鑑定)처럼 시작해 엉뚱한 결론으로 떨어지는 반전",
   friend: "친구가 소개해 주듯 편한 서술체. 단 대화가 아닌 평론 문장",
@@ -45,6 +51,7 @@ export function buildPrompt(
   detail: ClanDetail,
   tone: string,
   famousNames: string[] = [],
+  featuredName: string | null = null,
 ): string {
   const toneInstruction =
     TONE_INSTRUCTIONS[tone] ?? TONE_INSTRUCTIONS[DEFAULT_TONE];
@@ -62,7 +69,11 @@ export function buildPrompt(
     .map((r) => `${r.residence} ${formatNumber(r.count)}건`)
     .join(", ");
   const famousLine =
-    famousNames.length > 0 ? `이 본관 출신 유명인: ${famousNames.join(", ")}` : "";
+    featuredName
+      ? `이번 리뷰에서 반드시 언급할 이 본관 출신 유명인: ${featuredName} (이 이름을 그대로 사용할 것. 다른 인물로 바꾸지 말 것)`
+      : famousNames.length > 0
+        ? `이 본관 출신 유명인 후보: ${famousNames.join(", ")}`
+        : "";
 
   return [
     "너는 한국 인터넷 밈 문화에 능통한 개그 작가다. 조선시대 과거시험 데이터를 가지고 '본관 리뷰'를 쓴다.",
